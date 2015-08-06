@@ -8,4 +8,6 @@ from connectAction import ConnectAction
 from settingsAction import SettingsAction
 from idleAction import IdleAction
 from mplayerCameraAction import MPlayerCameraAction
-
+from folderAction import FolderAction
+from printAction import PrintAction
+from jobAction import JobAction

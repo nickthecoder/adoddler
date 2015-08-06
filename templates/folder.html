@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}Folder{% endblock %}
+{% block h1 %}Folder{% endblock %}
+
+{% block head %}
+    <script type="text/javascript" src="/net_compressed.js"></script>
+    <script type="text/javascript" src="/navigate.js"></script>
+{% endblock %}
+
+{% block content %}
+    {{ super() }}
+
+    {% for file in files %}
+        <a href="/print?file={{file|e}}"><button class="action">{{ file |e }}</button></a>
+    {% endfor %}
+
+{% endblock %}
+
+

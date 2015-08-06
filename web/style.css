@@ -29,6 +29,7 @@ form { margin: 0; padding: 0; }
 #info .item { float: left; }
 
 .options { text-align: center; clear: both; line-height: 50px; }
+.dialog { text-align: center; }
 
 #navigate { width: 400px; margin: 0 auto; text-align: center; }
 

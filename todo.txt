@@ -1,17 +1,9 @@
+Delete button
+    GET asks Are you sure? Yes does the POST and deletes it.
+
+Implement JobAction - In place of Connect/Disconnect
+
 Add a favicon
-
-
-Implement Print...
-    Show a list of all gcode files in the "print" folder (set in settings.py)
-        or allow a file to be uploaded???
-
-    Click on a file...
-        Shows info about the file
-        Delete button
-            GET asks Are you sure? Yes does the POST and deletes it.
-        Print button
-            GET asks Are you sure? Yes does the POST and prints it.
-        Back button goes back to the list of files in the print folder.
 
 Make settings editable
 

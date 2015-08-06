@@ -19,7 +19,6 @@ class AbstractAction :
         handler.send_header("Content-type", self.get_content_type( handler ) )
         handler.send_header("Content-Length", str(len(text)))
 
-
     def do_HEAD(self, handler) :
 
         text = self.get_GET(handler)
@@ -41,7 +40,6 @@ class AbstractAction :
         handler.end_headers()
 
         handler.wfile.write( text )
-
 
     def get_GET( self, handler ) :
         raise

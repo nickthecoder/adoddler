@@ -22,7 +22,7 @@ class HTMLTemplateAction( AbstractAction ) :
         template = self.template
         if not template :
             template = configuration.jenv.get_template( self.template_name )
-    
+
         data = self.data_GET( handler )
         data.update( self.default_data( handler ) )
         return template.render( data ).encode("utf-8")
@@ -31,7 +31,7 @@ class HTMLTemplateAction( AbstractAction ) :
         template = self.template
         if not template :
             template = configuration.jenv.get_template( self.template_name )
-    
+
         data = self.data_POST( handler )
         data.update( self.default_data( handler ) )
         return template.render( data ).encode("utf-8")

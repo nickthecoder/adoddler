@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}Folder{% endblock %}
+{% block h1 %}Folder{% endblock %}
+
+{% block content %}
+    {{ super() }}
+
+    <div class="dialog">
+        <p>
+            Confirm print of : {{ params.file[0] |e }}
+        </p>
+        <div class="options">
+            <form action="/print" method="post">
+                <a href="/folder"><button class="action">Cancel</button></a>
+                <button class="action" name="print" value="{{ params.file[0] }}">Print</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+
