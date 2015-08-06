@@ -25,17 +25,25 @@ button.tenth { font-size: 60%; }
 
 form { margin: 0; padding: 0; }
 
-#info { float: right; }
+#info { float: right; line-height: 50px; }
 #info .item { float: left; }
 
-.gcode { text-align: center; line-height: 70px; clear: both; }
+.options { text-align: center; clear: both; line-height: 50px; }
+
 #navigate { width: 400px; margin: 0 auto; text-align: center; }
 
 #nav-e { padding-top: 35px; height: 250px; float: left; }
 #nav-z { height: 250px; float: right; }
 #nav-xy { padding-top: 20px; }
 
-#footer { font-size: 80%; text-align: right; }
+#footer { font-size: 80%; text-align: right; margin-top: 2em; }
+
+#camera { text-align: center; }
+#camera img { margin-bottom: 2em; }
+
+@media screen and (max-width: 640px) {
+    #camera img { max-width: 100%; }
+}
 
 @media screen and (max-width:450px) {
     #nav-z { float: left; margin-left: 20px; }

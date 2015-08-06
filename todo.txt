@@ -1,10 +1,8 @@
-Choose a better name?
-
-Place into "projects", and give it its own git repository on github.
+Do the "for" loop for device inside "connect" rather than in settings.
+    Settings should just add "*"
 
 Add a favicon
 
-Add Camera page
 
 Implement Print...
     Show a list of all gcode files in the "print" folder (set in settings.py)

@@ -18,6 +18,9 @@ configuration.register_action( "/connect", ConnectAction() )
 configuration.register_action( "/settings", SettingsAction("settings.html") )
 configuration.register_action( "/about", HTMLTemplateAction("about.html") )
 
+configuration.register_action( "/camera", HTMLTemplateAction("camera.html") )
+configuration.register_action( "/camera.jpg", MPlayerCameraAction() )
+
 for i in range( 0,10 ) :
     device = "/dev/ttyACM" + str( i )
     if os.path.exists( device ) :

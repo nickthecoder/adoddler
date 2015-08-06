@@ -87,13 +87,14 @@
             </form>
         </div>
 
-        <div class="gcode">
-            <form action="/gcode" method="post">
+        <form action="/gcode" method="post">
+            <div class="options">
+
                 {% for name in config.gcode_snippets %}
                     <button class="action" name="gcode" value="{{name |e}}">{{name |e}}</button>
                 {% endfor %}
-            </form>
-        </div>
+            </div>
+        </form>
 
     {% endif %}
 

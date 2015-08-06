@@ -43,7 +43,7 @@ class AbstractAction :
         handler.wfile.write( text )
 
 
-    def get_GET2( self, handler ) :
+    def get_GET( self, handler ) :
         raise
     
     def get_POST( self, handler ) :

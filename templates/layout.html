@@ -10,31 +10,37 @@
     <div id="info">
 
         <div class="item">
-            <a href="/"><button class="go">Home</button></a>
+            <a href="/"><button class="go">Home</button></a>&nbsp;
         </div>
 
         <div class="item">
-            <a href="/settings"><button class="go">Settings</button></a>
+            <a href="/settings"><button class="go">Settings</button></a>&nbsp;
         </div>
 
+        {% if config.registered_actions['/camera'] %}
         <div class="item">
-            <a href="/print"><button class="action">Print...</button></a>
+            <a href="/camera"><button class="go">Camera</button></a>&nbsp;
+        </div>
+        {% endif %}
+
+        <div class="item">
+            <a href="/print"><button class="action">Print...</button></a>&nbsp;
         </div>
 
         <div class="item" id="printer_status">
             {% if pm.status == 0 %}
                 <form action="/disconnect" method="post">
-                    <button class="danger" name="disconnect">Disconnect</button>
+                    <button class="danger" name="disconnect">Disconnect</button>&nbsp;
                 </form>
             {% endif %}
             {% if pm.status == 1 %}
                 <form action="/job" method="get">
-                    <button class="go" name="active">Active</button>
+                    <button class="go" name="active">Active</button>&nbsp;
                 </form>
             {% endif %}
             {% if pm.status == 2 %}
                 <form action="/connect" method="post">
-                    <button class="go" name="connect">Connect</button>
+                    <button class="go" name="connect">Connect</button>&nbsp;
                 </form>
             {% endif %}
         </div>

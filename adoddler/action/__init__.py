@@ -7,4 +7,5 @@ from disconnectAction import DisconnectAction
 from connectAction import ConnectAction
 from settingsAction import SettingsAction
 from idleAction import IdleAction
+from mplayerCameraAction import MPlayerCameraAction
 
