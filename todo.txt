@@ -1,0 +1,26 @@
+Choose a better name?
+
+Place into "projects", and give it its own git repository on github.
+
+Add a favicon
+
+Add Camera page
+
+Implement Print...
+    Show a list of all gcode files in the "print" folder (set in settings.py)
+        or allow a file to be uploaded???
+
+    Click on a file...
+        Shows info about the file
+        Delete button
+            GET asks Are you sure? Yes does the POST and deletes it.
+        Print button
+            GET asks Are you sure? Yes does the POST and prints it.
+        Back button goes back to the list of files in the print folder.
+
+Make settings editable
+
+A setting for caching jinja templates on/off
+
+GCodeAction has a weird "error" method. Delete or implement it properly.
+

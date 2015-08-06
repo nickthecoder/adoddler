@@ -1,0 +1,57 @@
+<html>
+<head>
+    <title>{% block title %}Adoddler Web{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/style.css">
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+    <div id="info">
+
+        <div class="item">
+            <a href="/"><button class="go">Home</button></a>
+        </div>
+
+        <div class="item">
+            <a href="/settings"><button class="go">Settings</button></a>
+        </div>
+
+        <div class="item">
+            <a href="/print"><button class="action">Print...</button></a>
+        </div>
+
+        <div class="item" id="printer_status">
+            {% if pm.status == 0 %}
+                <form action="/disconnect" method="post">
+                    <button class="danger" name="disconnect">Disconnect</button>
+                </form>
+            {% endif %}
+            {% if pm.status == 1 %}
+                <form action="/job" method="get">
+                    <button class="go" name="active">Active</button>
+                </form>
+            {% endif %}
+            {% if pm.status == 2 %}
+                <form action="/connect" method="post">
+                    <button class="go" name="connect">Connect</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <h1>{% block h1 %}Adoddler{% endblock %}</h1>
+    {% if pm.temperature %}
+        <div class="item">
+            Extruder : {{ pm.temperature }}°C
+        </div>
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+
+    <div id="footer">
+        © Nick Robinson 2015. <a href="/about">About Adoddler...</a>
+    </div>
+</body>
+</html>
+

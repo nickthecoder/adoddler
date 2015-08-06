@@ -1,0 +1,45 @@
+html { margin: 0; padding: 0; background: #fff; color: #000; font-family: Verdana, Geneva, sans-serif; }
+a, a:visited { color: #000; text-decoration: none; font-weight: bold; }
+
+h1,h2,h3,h4 { font-family: "Trebuchet MS", Helvetica, sans-serif; color: #333; }
+h1 { clear: both; font-size: 30px; margin: 20px 0; padding; 0 }
+
+.box { border:3px solid; border-radius: 6px; margin:10px 0px; padding: 10px;  }
+.message { background: #abf6aa; border-color: #12d500; color:#038300;  }
+
+
+button { vertical-align: middle; margin: 0px 5px; padding:0.5em; min-width: 8em; }
+button { border: 3px solid #313739; color: #313739; border-radius: 6px; }
+
+button.action { background: #3333b3; border-color: #14108f; color: #bebcfb; }
+button.danger { background: #af0000; border-color: #8d0000; color: #fbbcbc; }
+button.go { background: #07af00; border-color: #008d05; color: #bcfbbe; }
+
+button.small { min-width: 40px; min-height: 40px; margin: 0; }
+
+
+button.ten { font-weight: bold; font-size: 120%; }
+button.tenth { font-size: 60%; }
+
+#disconnect
+
+form { margin: 0; padding: 0; }
+
+#info { float: right; }
+#info .item { float: left; }
+
+.gcode { text-align: center; line-height: 70px; clear: both; }
+#navigate { width: 400px; margin: 0 auto; text-align: center; }
+
+#nav-e { padding-top: 35px; height: 250px; float: left; }
+#nav-z { height: 250px; float: right; }
+#nav-xy { padding-top: 20px; }
+
+#footer { font-size: 80%; text-align: right; }
+
+@media screen and (max-width:450px) {
+    #nav-z { float: left; margin-left: 20px; }
+    #nav-e { float: left; margin-left: 70px; }
+    #nav-xy { clear: both; }
+}
+

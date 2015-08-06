@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}Settings{% endblock %}
+{% block h1 %}Settings{% endblock %}
+
+{% block content %}
+    {% for setting in printer_settings %}
+        <div class="setting">
+            <h3>{{ setting.name |e}} ( {{ setting.code |e}} )</h3>
+
+            {% for subcode in setting.subcodes %}
+                {{ subcode |e}}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+{% endblock %}
