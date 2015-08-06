@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}Folder{% endblock %}
+{% block h1 %}Folder{% endblock %}
+
+{% block content %}
+    {{ super() }}
+
+    <div class="dialog">
+        <p>
+            Cancel Job?
+        </p>
+        <div class="options">
+            <form action="/cancel" method="post">
+                <button class="action" name="no" value="no">No</button>
+                <button class="danger" name="yes" value="yes">Yes</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+
