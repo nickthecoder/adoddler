@@ -1,6 +1,3 @@
-Implement JobAction - In place of Connect/Disconnect
-    Debug JobAction - why is pm.print_job not set?
-
 Add a favicon
 
 Make settings editable

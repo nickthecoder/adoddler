@@ -1,0 +1,30 @@
+    {% if pm.messages %}
+        <div class="message box">
+            {% for message in pm.messages %}
+                <p>
+                    {{ message |e}}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if pm.warnings %}
+        <div class="message box">
+            {% for message in pm.warnings %}
+                <p>
+                    {{ message |e}}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if pm.errors %}
+        <div class="message box">
+            {% for message in pm.errors %}
+                <p>
+                    {{ message |e}}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
