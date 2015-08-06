@@ -11,12 +11,13 @@ class HTMLTemplateAction( AbstractAction ) :
             self.template = None
 
     def default_data( self, handler ) :
-        result = dict()
-        result[ "params" ] = handler.parameters
-        result[ "config" ] = configuration
-        result[ "pm" ] = configuration.printer_manager
-        result[ "handler" ] = handler
-        return result
+        return {
+            "params": handler.parameters,
+            "config": configuration,
+            "pm": configuration.printer_manager,
+            "handler": handler,
+            "job": configuration.printer_manager.print_job
+            }
 
     def get_GET( self, handler ) :
         template = self.template

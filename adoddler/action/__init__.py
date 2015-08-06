@@ -13,4 +13,5 @@ from printAction import PrintAction
 from jobAction import JobAction
 from deleteAction import DeleteAction
 from cancelAction import CancelAction
+from changeSettingAjaxAction import ChangeSettingAjaxAction
 

@@ -12,12 +12,11 @@
         </p>
         <div class="options">
             <form action="/delete" method="post">
-                <button class="action" name="cancel" value="cancel">Cancel</button>
                 <button class="danger" name="file" value="{{ params.file[0] }}">Delete</button>
+                <button name="cancel" value="cancel">Cancel</button>
             </form>
         </div>
     </div>
 
 {% endblock %}
-
 

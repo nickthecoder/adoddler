@@ -21,9 +21,10 @@ configuration.register_action( "/settings", SettingsAction("settings.html") )
 configuration.register_action( "/about", HTMLTemplateAction("about.html") )
 configuration.register_action( "/folder", FolderAction("folder.html") )
 configuration.register_action( "/print", PrintAction("print.html") )
-configuration.register_action( "/job", PrintAction("job.html") )
+configuration.register_action( "/job", JobAction("job.html") )
 configuration.register_action( "/delete", DeleteAction("delete.html") )
 configuration.register_action( "/cancel", CancelAction("cancel.html") )
+configuration.register_action( "/changeSettingAjax", ChangeSettingAjaxAction() )
 
 # Comment these out if you don't have a camera
 configuration.register_action( "/camera", HTMLTemplateAction("camera.html") )

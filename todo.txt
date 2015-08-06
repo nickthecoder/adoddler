@@ -1,6 +1,5 @@
 Implement JobAction - In place of Connect/Disconnect
-    Have PrintJob count the commands before printing, for a progress bar.
-    Cancel action
+    Debug JobAction - why is pm.print_job not set?
 
 Add a favicon
 

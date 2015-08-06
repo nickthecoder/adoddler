@@ -43,10 +43,12 @@ class SettingsAction( HTMLTemplateAction ) :
                 values = line.split()
                 d = printer_settings[len(printer_settings)-1]
                 d['code'] = values[0]
-                d['subcodes'] = []
+                d['fields'] = []
                 for i in range( 1, len( values ) ) :
-                    d['subcodes'].append( values[i] )
-                    
+                    letter = values[i][0]
+                    value = float( values[i][1:] )
+                    d['fields'].append( {'letter': letter, 'value': value } )
+
             else :
                 if line.endswith( ":" ) :
                     printer_settings.append( {'name':line[0:-1]} )

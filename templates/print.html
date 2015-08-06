@@ -12,12 +12,14 @@
         </p>
         <div class="options">
             <form action="/print" method="post">
-                <a href="/folder"><button class="action">Cancel</button></a>
-                <button class="action" name="file" value="{{ params.file[0] }}">Print</button>
+                <button class="go" name="file" value="{{ params.file[0] }}">Print</button>
+                <button name="cancel" value="cancel">Cancel</button>
             </form>
         </div>
     </div>
 
 {% endblock %}
+
+
 
 

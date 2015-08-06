@@ -2,15 +2,28 @@
 {% block title %}Settings{% endblock %}
 {% block h1 %}Settings{% endblock %}
 
+
+{% block head %}
+    <script type="text/javascript" src="/net_compressed.js"></script>
+    <script type="text/javascript" src="/settings.js"></script>
+{% endblock %}
+
 {% block content %}
     {% for setting in printer_settings %}
         <div class="setting">
             <h3>{{ setting.name |e}} ( {{ setting.code |e}} )</h3>
 
-            {% for subcode in setting.subcodes %}
-                {{ subcode |e}}
+            {% for field in setting.fields %}
+                {{ field.letter |e}} =
+                <a onclick="editSetting( this, '{{setting.code|e}}', '{{field.letter|e}}', '{{field.value |e}}' );" >{{ field.value |e}}</a>
             {% endfor %}
         </div>
     {% endfor %}
 
+    <div id="okcancel" style="display:none;">
+        <button onclick="saveSetting()" class="go">Ok</button>
+        <button onclick="cancelSetting()">Cancel</button>
+    </div>
+
 {% endblock %}
+
