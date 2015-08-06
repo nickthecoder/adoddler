@@ -22,8 +22,4 @@ class AbstractGCodeAction( AbstractAction ) :
 
         # Child classes will do more after this.
 
-    def error( self, handler, text ) :
-        # MORE create an error page
-        # MORE Make a generic error method, not only for GCodeAction
-        print "Error ", text
 

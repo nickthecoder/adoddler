@@ -7,8 +7,12 @@ class PrintAction( HTMLTemplateAction ) :
 
     def do_POST( self, handler ) :
         
-        if 'print' in handler.parameters :
-            file = handler.parameters['print'][0]
+        if 'file' in handler.parameters :
+            file = handler.parameters['file'][0]
+
+            if file.find("..") >= 0 :
+                self.error( handler, "Invalid filename (contains '..')" )
+                return
 
             path = os.path.join( configuration.print_folder, file + ".gcode" )
             configuration.printer_manager.send_filename( path )

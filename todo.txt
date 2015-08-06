@@ -1,6 +1,3 @@
-Delete button
-    GET asks Are you sure? Yes does the POST and deletes it.
-
 Implement JobAction - In place of Connect/Disconnect
 
 Add a favicon

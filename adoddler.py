@@ -16,7 +16,7 @@ class AdoddlerHandler( SimpleHTTPServer.SimpleHTTPRequestHandler ) :
 
     def get_action(self) :
         # Remove the parameters, and then check if this url requires special treatment
-        bare_path = self.path.split('?',1)[0]
+        bare_path = self.path.split('?')[0]
         return configuration.registered_actions.get( bare_path )
 
     def end_headers( self ) :
