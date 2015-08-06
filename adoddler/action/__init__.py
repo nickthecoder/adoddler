@@ -12,4 +12,5 @@ from folderAction import FolderAction
 from printAction import PrintAction
 from jobAction import JobAction
 from deleteAction import DeleteAction
+from cancelAction import CancelAction
 

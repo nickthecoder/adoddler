@@ -1,4 +1,6 @@
 Implement JobAction - In place of Connect/Disconnect
+    Have PrintJob count the commands before printing, for a progress bar.
+    Cancel action
 
 Add a favicon
 
@@ -6,5 +8,5 @@ Make settings editable
 
 A setting for caching jinja templates on/off
 
-GCodeAction has a weird "error" method. Delete or implement it properly.
+AbstractAction has a weird "error" method. Delete or implement it properly.
 

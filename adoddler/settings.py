@@ -23,6 +23,7 @@ configuration.register_action( "/folder", FolderAction("folder.html") )
 configuration.register_action( "/print", PrintAction("print.html") )
 configuration.register_action( "/job", PrintAction("job.html") )
 configuration.register_action( "/delete", DeleteAction("delete.html") )
+configuration.register_action( "/cancel", CancelAction("cancel.html") )
 
 # Comment these out if you don't have a camera
 configuration.register_action( "/camera", HTMLTemplateAction("camera.html") )

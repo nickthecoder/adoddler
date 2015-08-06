@@ -6,6 +6,20 @@
 {% block content %}
     {{ super() }}
 
+    Job : {{ job }}
+    <br/>
+    pm.job : {{ pm.print_job }}
+    <br/>
+    pm.status : {{ pm.status }}
+    <br/>
+
+    {% if job %}
+        Command {{ job.serial_reader.ok_count }} of {{ job.command_total }}
+
+        
+    {% else %}
+        Job finished
+    {% endif %}
 
 {% endblock %}
 

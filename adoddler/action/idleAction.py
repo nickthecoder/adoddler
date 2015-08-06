@@ -9,11 +9,12 @@ class IdleAction( HTMLTemplateAction ) :
     def do_GET(self, handler) :
         pm = configuration.printer_manager
 
+        HTMLTemplateAction.do_GET( self, handler )
+
+        pm.clear_messages()
+
         if pm.status == PrinterStatus.IDLE :
             path = os.path.join( os.path.join( "gcode", "misc", ), "idle.gcode" )
             pm.send_filename( path )
 
-        HTMLTemplateAction.do_GET( self, handler )
-
-        pm.clear_messages()
 

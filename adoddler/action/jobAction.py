@@ -10,5 +10,5 @@ class JobAction( HTMLTemplateAction ) :
         pm = configuration.printer_manager
         pm.clear_messages()
 
-        return dict()
+        return { 'job': pm.print_job }
 

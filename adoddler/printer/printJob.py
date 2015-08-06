@@ -15,9 +15,22 @@ class PrintJob( Thread ) :
         self.input = None
         self.auto_disconnect = False
 
+        # Note, command_total is NOT set when send_file is used, only when send_filename is used.
+        self.command_total = None
+        self.command_count = 0
+
     def send_filename( self, path, auto_disconnect = False ) :
-        self.send_file( open(path, "r"), auto_disconnect )
- 
+        f = open(path, "r")
+
+        # Count the number of commands
+        self.command_total = 0
+        for line in f :
+            line = self.tidy( line )
+            if line :
+                self.command_total += 1
+        f.seek(0)
+
+        self.send_file( f, auto_disconnect )
 
     def send_file( self, f, auto_disconnect = False ) :
         self.auto_disconnect = auto_disconnect
@@ -27,8 +40,12 @@ class PrintJob( Thread ) :
         pm.ensure_idle()
 
         if pm.status == PrinterStatus.IDLE :
-    
+
+            print "*** Setting to active and print job"
+            pm.status = PrinterStatus.ACTIVE
+            pm.print_job = self
             self.status = JobStatus.RUNNING
+            print "*** start thread"
             self.start()
         
     def cancel( self ) :
@@ -58,6 +75,7 @@ class PrintJob( Thread ) :
         while self.__running() :
             sleep(1)
 
+        print "*** ending job"
         pm.status = PrinterStatus.IDLE
         pm.print_job = None
         self.status = JobStatus.ENDED

@@ -25,7 +25,6 @@ class SerialReader( Thread ) :
         line = line.strip()
         if line.startswith( 'ok' ):
             self.ok_count += 1
-        print ">", line
 
         for listener in self.listeners :
             listener( line )
