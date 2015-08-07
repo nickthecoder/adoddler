@@ -10,6 +10,7 @@ base_dir = os.path.join( os.getcwd(), 'web' )
 print_folder = "print"
 
 jenv = None
+cache_templates = False
 
 printer_manager = None
 

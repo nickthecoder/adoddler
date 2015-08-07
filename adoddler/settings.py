@@ -8,6 +8,7 @@ from adoddler.printer import *
 print "Initialising configuration"
 
 configuration.jenv = Environment(loader=FileSystemLoader('templates'))
+configuration.cache_templates = True
 
 configuration.register_action( "/", IdleAction("index.html") )
 

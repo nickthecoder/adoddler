@@ -1,8 +1,2 @@
-Add a favicon
-
-Make settings editable
-
-A setting for caching jinja templates on/off
-
 AbstractAction has a weird "error" method. Delete or implement it properly.
 

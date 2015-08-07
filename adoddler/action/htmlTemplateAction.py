@@ -3,9 +3,9 @@ from adoddler.action import AbstractAction
 
 class HTMLTemplateAction( AbstractAction ) :
 
-    def __init__( self, template_name, cache_template = False ) :
+    def __init__( self, template_name ) :
         self.template_name = template_name
-        if cache_template :
+        if configuration.cache_templates :
             self.template = configuration.jenv.get_template(template_name)
         else :
             self.template = None
@@ -20,6 +20,7 @@ class HTMLTemplateAction( AbstractAction ) :
             }
 
     def get_GET( self, handler ) :
+        # Get the template if it wasn't cached in the constructor
         template = self.template
         if not template :
             template = configuration.jenv.get_template( self.template_name )
