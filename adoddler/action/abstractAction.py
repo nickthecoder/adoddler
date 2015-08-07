@@ -20,9 +20,7 @@ class AbstractAction :
         handler.send_header("Content-Length", str(len(text)))
 
     def error( self, handler, text ) :
-        # MORE create an error page
-        # MORE Make a generic error method, not only for GCodeAction
-        print "Error ", text
+        self.send_redirect( handler, '/error', { 'message': text }
 
     def do_HEAD(self, handler) :
 

@@ -26,6 +26,7 @@ configuration.register_action( "/job", HTMLTemplateAction("job.html") )
 configuration.register_action( "/delete", DeleteAction("delete.html") )
 configuration.register_action( "/cancel", CancelAction("cancel.html") )
 configuration.register_action( "/changeSettingAjax", ChangeSettingAjaxAction() )
+configuration.register_action( "/error", HTMLTemplateAction('error.html') )
 
 # Comment these out if you don't have a camera
 configuration.register_action( "/camera", HTMLTemplateAction("camera.html") )

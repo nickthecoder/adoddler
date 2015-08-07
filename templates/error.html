@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}Error{% endblock %}
+{% block h1 %}Error{% endblock %}
+
+{% block content %}
+    {{ super() }}
+
+    {% if params.message %}
+        <div class="message box">
+            <p>
+                {{ params.message[0] |e}}
+            </p>
+        </div>
+    {% endif %}
+
+{% endblock %}
+

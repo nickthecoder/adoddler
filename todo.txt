@@ -1,2 +1,2 @@
-AbstractAction has a weird "error" method. Delete or implement it properly.
+
 
