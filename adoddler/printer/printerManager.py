@@ -1,5 +1,4 @@
 import os
-import serial
 from time import sleep
 
 from adoddler.printer import SerialReader, PrintJob, PrinterStatus
@@ -7,9 +6,8 @@ from adoddler.printer import SerialReader, PrintJob, PrinterStatus
 class PrinterManager :
 
 
-    def __init__( self, device="/dev/ttyACM?", baud_rate=9600 ) :
-        self.device = device
-        self.baud_rate = baud_rate
+    def __init__( self, connector ) :
+        self.connector = connector
 
         self.status = PrinterStatus.DISCONNECTED
 
@@ -36,20 +34,11 @@ class PrinterManager :
         if self.status != PrinterStatus.IDLE :
             raise Exception( "Printer is not IDLE" )
 
-    def find_device( self ) :
-        if self.device.endswith( "?" ) :    
-            for i in range( 0,10 ) :
-                device = self.device[0:-1] + str( i )
-                if os.path.exists( device ) :
-                    return device
-            raise Exception( "Couldn't find a device mathcing " + self.device )
-        else :
-            return self.device
 
     def connect( self ) :
         if self.status == PrinterStatus.DISCONNECTED :
 
-            self.connection = serial.Serial( port=self.find_device(), baudrate = self.baud_rate, timeout = 1 )
+            self.connection = self.connector.connect()
             self.serial_reader = SerialReader( self.connection )
             self.serial_reader.start()
             self.status = PrinterStatus.IDLE

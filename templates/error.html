@@ -14,5 +14,14 @@
         </div>
     {% endif %}
 
+
+    {% if params.exception %}
+        <div class="message box">
+            <p>
+                {{ params.exception[0] |e}}
+            </p>
+        </div>
+    {% endif %}
+
 {% endblock %}
 

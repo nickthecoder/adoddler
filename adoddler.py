@@ -29,48 +29,63 @@ class AdoddlerHandler( SimpleHTTPServer.SimpleHTTPRequestHandler ) :
         SimpleHTTPServer.SimpleHTTPRequestHandler.end_headers( self )
 
     def do_HEAD(self) :
-        action = self.get_action()
-        if action :
-            self.serving_static = False
-            action.do_HEAD(self)
-        else :
-            self.serving_static = True
-            SimpleHTTPServer.SimpleHTTPRequestHandler.do_HEAD(self)
+        try :
+            action = self.get_action()
+            if action :
+                self.serving_static = False
+                action.do_HEAD(self)
+            else :
+                self.serving_static = True
+                SimpleHTTPServer.SimpleHTTPRequestHandler.do_HEAD(self)
+        except Exception as e :
+            self.error( e )
+            
         
     def do_GET(self) :
-        query = self.path.find('?')
-        if query >= 0 :
-            self.parameters = cgi.parse_qs(self.path[query+1:], keep_blank_values=1)
-        else :
-            self.parameters = dict()
+        try :
+            query = self.path.find('?')
+            if query >= 0 :
+                self.parameters = cgi.parse_qs(self.path[query+1:], keep_blank_values=1)
+            else :
+                self.parameters = dict()
 
-        action = self.get_action()
-        if action :
-            self.serving_static = False
-            action.do_GET(self)
-        else :
-            self.serving_static = True
-            SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
+            action = self.get_action()
+            if action :
+                self.serving_static = False
+                action.do_GET(self)
+            else :
+                self.serving_static = True
+                SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
+        except Exception as e :
+            self.error( e )
     
     def do_POST(self) :
+        try :
+            ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
+            if ctype == 'multipart/form-data':
+                self.parameters = cgi.parse_multipart(self.rfile, pdict)
+            elif ctype == 'application/x-www-form-urlencoded':
+                length = int(self.headers.getheader('content-length'))
+                self.parameters = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
+            else:
+                self.parameters = {}
 
-        ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
-        if ctype == 'multipart/form-data':
-            self.parameters = cgi.parse_multipart(self.rfile, pdict)
-        elif ctype == 'application/x-www-form-urlencoded':
-            length = int(self.headers.getheader('content-length'))
-            self.parameters = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
-        else:
-            self.parameters = {}
+            action = self.get_action()
+            if action :
+                self.serving_static = False
+                action.do_POST(self)
+            else :
+                self.serving_static = True
+                SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
+        except Exception as e :
+            self.error( e )
+    
+    def error( self, e ) :
 
-        action = self.get_action()
-        if action :
-            self.serving_static = False
-            action.do_POST(self)
-        else :
-            self.serving_static = True
-            SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
-
+        self.parameters['exception'] = e
+        self.serving_static = False
+        configuration.registered_actions.get( "/error" ).do_GET(self)
+        
 
     def translate_path(self, path):
         """Translate a /-separated PATH to the local filename syntax.

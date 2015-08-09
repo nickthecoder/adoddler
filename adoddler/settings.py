@@ -38,7 +38,10 @@ for filename in os.listdir("gcode") :
         configuration.gcode_snippets.append( filename[0:-6] )
 configuration.gcode_snippets.sort()
 
-configuration.printer_manager = PrinterManager( "/dev/ttyACM?", baud_rate=9600 )
+connector = NixConnector( ["/dev/ttyUSB?", "/dev/ttyACM?"], 115200 )
+# connector = SimpleConnector( "YOUR_DEVICE", YOUR_BAUD_RATE )
+
+configuration.printer_manager = PrinterManager( connector )
 
 print "Done initialising configuration"
 
