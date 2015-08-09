@@ -20,7 +20,7 @@ class AbstractAction :
         handler.send_header("Content-Length", str(len(text)))
 
     def error( self, handler, text ) :
-        self.send_redirect( handler, '/error', { 'message': text }
+        self.send_redirect( handler, '/error', { 'message': text } )
 
     def do_HEAD(self, handler) :
 
