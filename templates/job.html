@@ -3,16 +3,38 @@
 {% block title %}Job{% endblock %}
 {% block h1 %}Job{% endblock %}
 
-{% block content %}
+{% block head %}
+    {% if params.every %}
+        <meta http-equiv="refresh" content="{{ params.every[0] |e }}">
+    {% endif %}
+{% endblock %}
+
+{% block content %} 
     {{ super() }}
 
     {% if job %}
-        Command {{ job.serial_reader.ok_count }} of {{ job.command_total }}     
+
+        {% include 'progress.html' %}
+
+        <div class="options">
+            <form action="/cancel" method="post">
+                <button class="danger" name="cancel" value="cancel">Cancel</button>
+            </form>
+        </div>
+
     {% else %}
         Job finished
     {% endif %}
 
     {% include 'messages.html' %}
+
+    <div class="options">
+        <a href="/job"><button class="danger">Never</button></a>
+        <a href="/job?every=60"><button class="go">1 Minute</button></a>
+        <a href="/job?every=10"><button class="go">10 Seconds</button></a>
+        <a href="/job?every=2"><button class="go">2 Seconds</button></a>
+        <p>Update Frequency</p>
+    </div>
 
 {% endblock %}
 

@@ -1,2 +1,4 @@
+Add Z-Home button
+Turn off fans/motors etc on disconnect.
 
 

@@ -1,0 +1,18 @@
+<div class="progress">
+    <div class="progress_done" style="width: {{ (100 * job.serial_reader.ok_count / job.command_total) }}%"></div>
+    <div class="progress_text">
+        {% if job.serial_reader.ok_count > 5000 %}
+            {{ (job.serial_reader.ok_count / 1000) | int }}k
+        {% else %}
+            {{ job.serial_reader.ok_count }}
+        {% endif %}
+        of
+        {% if job.command_total > 5000 %}
+            {{ (job.command_total / 1000) | int}}k
+        {% else %}
+            {{ job.command_total }}
+        {% endif %}
+        
+    </div>
+</div>
+

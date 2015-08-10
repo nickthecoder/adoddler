@@ -66,6 +66,7 @@ class PrintJob( Thread ) :
                 break
             line = self.tidy( line )
             if line :
+                # print "<<", line
                 output.write( line )
                 output.write( "\n" )
                 self.command_count += 1        
@@ -87,11 +88,14 @@ class PrintJob( Thread ) :
         print "***** Job finished"
 
     def __running( self ) :
+        if self.status == JobStatus.CANCELLING :
+            return false
+
         return self.command_count > self.serial_reader.ok_count
 
     def tidy( self, line ) :
         semi = line.find( ";" )
-        if semi :
+        if semi >= 0 :
             line = line[0:semi]
         return line.strip()
 

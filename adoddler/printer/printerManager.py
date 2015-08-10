@@ -102,4 +102,8 @@ class PrinterManager :
         if self.print_job :
             self.print_job.cancel()
 
+    def job_error( self, e ) :
+        self.errors.append( str(e) )
+        self.cancel()
+
 

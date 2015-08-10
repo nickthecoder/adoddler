@@ -1,6 +1,5 @@
-# Connects to Serial port using Unix style files (in /dev)
-# Windows users may want to use "SimpleConnector", or write something
-# appropriate themselves.
+# Connects to Serial port using a single port and baud_rate.
+# On linix/bsd/macos etc, then nixConnector is more flexible.
 
 class SimpleConnector() :
 

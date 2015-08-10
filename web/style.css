@@ -42,6 +42,10 @@ form { margin: 0; padding: 0; }
 #camera { text-align: center; }
 #camera img { margin-bottom: 2em; }
 
+.progress { background: #888; width: 300px; margin: 10px auto; border: 1px solid #000; position: relative;height: 22px; border-radius: 3px; }
+.progress_done { background: #07af00; height: 20px; position: absolute; margin: 1px; border-radius: 2px; }
+.progress_text { position: absolute; width: 100%; font-size: 14px; color: #fff;  text-align: center; }
+
 @media screen and (max-width: 640px) {
     #camera img { max-width: 100%; }
 }

@@ -10,15 +10,20 @@
 
 {% block content %}
 
-<div id="camera">
-    <img src="/camera.jpg" alt="Printer Cam"/>
-    <div class="options">
-        <a href="/camera"><button class="danger">Never</button></a>
-        <a href="/camera?every=60"><button class="go">1 Minute</button></a>
-        <a href="/camera?every=10"><button class="go">10 Seconds</button></a>
-        <a href="/camera?every=2"><button class="go">2 Seconds</button></a>
-        <p>Update Frequency</p>
+    {% if job %}
+        {% include 'progress.html' %}
+    {% endif %}
+
+
+    <div id="camera">
+        <img src="/camera.jpg" alt="Printer Cam"/>
+        <div class="options">
+            <a href="/camera"><button class="danger">Never</button></a>
+            <a href="/camera?every=60"><button class="go">1 Minute</button></a>
+            <a href="/camera?every=10"><button class="go">10 Seconds</button></a>
+            <a href="/camera?every=2"><button class="go">2 Seconds</button></a>
+            <p>Update Frequency</p>
+        </div>
     </div>
-</div>
 
 {% endblock %}
