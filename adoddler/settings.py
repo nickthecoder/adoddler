@@ -1,4 +1,6 @@
 import os
+import socket
+
 from jinja2 import Environment, FileSystemLoader
 
 from adoddler import configuration
@@ -6,6 +8,8 @@ from adoddler.action import *
 from adoddler.printer import *
 
 print "Initialising configuration"
+
+configuration.name = socket.gethostname()
 
 configuration.jenv = Environment(loader=FileSystemLoader('templates'))
 configuration.cache_templates = False
@@ -22,7 +26,6 @@ configuration.register_action( "/settings", SettingsAction("settings.html") )
 configuration.register_action( "/about", HTMLTemplateAction("about.html") )
 configuration.register_action( "/folder", FolderAction("folder.html") )
 configuration.register_action( "/print", PrintAction("print.html") )
-configuration.register_action( "/job", HTMLTemplateAction("job.html") )
 configuration.register_action( "/delete", DeleteAction("delete.html") )
 configuration.register_action( "/cancel", CancelAction("cancel.html") )
 configuration.register_action( "/changeSettingAjax", ChangeSettingAjaxAction() )

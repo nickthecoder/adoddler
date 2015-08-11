@@ -17,7 +17,7 @@ class PrintAction( HTMLTemplateAction ) :
             path = os.path.join( configuration.print_folder, file + ".gcode" )
             configuration.printer_manager.send_filename( path )
 
-            self.send_redirect( handler, "/job" )
+            self.send_redirect( handler, "/" )
 
         else :
 

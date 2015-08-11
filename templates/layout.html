@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>{% block title %}Adoddler Web{% endblock %}</title>
+    <title>{% block title %}{{ config.name |e }}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" href="/icon.png" />
@@ -35,9 +35,7 @@
                 </form>
             {% endif %}
             {% if pm.status == 1 %}
-                <form action="/job" method="get">
-                    <button class="go" name="active">Active</button>&nbsp;
-                </form>
+                <a href="/"><button class="go">Active</button></a>&nbsp;
             {% endif %}
             {% if pm.status == 2 %}
                 <form action="/connect" method="post">
@@ -57,7 +55,7 @@
     {% endblock %}
 
     <div id="footer">
-        © Nick Robinson 2015. <a href="/about">About Adoddler...</a>
+        <a href="/about">Adoddler</a> © Nick Robinson 2015.
     </div>
 </body>
 </html>

@@ -11,5 +11,5 @@ class CancelAction( HTMLTemplateAction ) :
         if job :
             job.cancel()
 
-        self.send_redirect( handler, "/index" )
+        self.send_redirect( handler, "/" )
 

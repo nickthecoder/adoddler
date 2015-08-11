@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Adoddler{% endblock %}
-{% block h1 %}Adoddler Home{% endblock %}
+{% block h1 %}{{ super() }} : home{% endblock %}
 
 {% block head %}
     <script type="text/javascript" src="/net_compressed.js"></script>
@@ -12,6 +11,12 @@
     {{ super() }}
 
     {% include 'messages.html' %}
+
+    {% if job %}
+
+        {% include 'progress.html' %}
+
+    {% endif %}
 
     {% if pm.status != 1 %}
         <div id="navigate">
