@@ -9,6 +9,7 @@
 </head>
 <body>
     <div id="info">
+        Printer Status : {{ pm.status }}
 
         <div class="item">
             <a href="/"><button class="go">Home</button></a>&nbsp;
@@ -29,15 +30,15 @@
         </div>
 
         <div class="item" id="printer_status">
-            {% if pm.status == 0 %}
+            {% if pm.status == PrinterStatus.IDLE %}
                 <form action="/disconnect" method="post">
                     <button class="danger" name="disconnect">Disconnect</button>&nbsp;
                 </form>
             {% endif %}
-            {% if pm.status == 1 %}
+            {% if pm.status == PrinterStatus.ACTIVE %}
                 <a href="/"><button class="go">Active</button></a>&nbsp;
             {% endif %}
-            {% if pm.status == 2 %}
+            {% if pm.status == PrinterStatus.DISCONNECTED %}
                 <form action="/connect" method="post">
                     <button class="go" name="connect">Connect</button>&nbsp;
                 </form>

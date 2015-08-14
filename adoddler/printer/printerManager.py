@@ -38,15 +38,21 @@ class PrinterManager :
     def connect( self ) :
         if self.status == PrinterStatus.DISCONNECTED :
 
+            
+            self.status = PrinterStatus.CONNECTING
             self.connection = self.connector.connect()
             self.serial_reader = SerialReader( self.connection )
             self.serial_reader.start()
-            self.status = PrinterStatus.IDLE
             
             self.listener = lambda line : self.process_line( line )
             self.serial_reader.add_listener( self.listener )
 
+            self.status = PrinterStatus.IDLE
+
     def process_line( self, line ) :
+        if line == "start" and self.status == PrinterStatus.CONNECTING :
+            self.status = PrinterStatus.IDLE
+
         if line.startswith( "T:" ) :
             parts = line.split( " " )
             bits = parts[0].split( ":" )
@@ -90,16 +96,20 @@ class PrinterManager :
 
         if self.status == PrinterStatus.IDLE :
             PrintJob().send_file( f, auto_disconnect )
+        else :
+            raise Exception( "Printer not idle" )
 
     def send_filename( self, path, auto_disconnect = False ) :
         self.ensure_connected()
 
         if self.status == PrinterStatus.IDLE :
             PrintJob().send_filename( path, auto_disconnect )
+        else :
+            raise Exception( "Printer not idle" )
 
     def cancel( self ) :
-        
         if self.print_job :
+            print "## Cancelling job"
             self.print_job.cancel()
 
     def job_error( self, e ) :

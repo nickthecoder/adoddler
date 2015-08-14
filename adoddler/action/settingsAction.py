@@ -24,7 +24,9 @@ class SettingsAction( HTMLTemplateAction ) :
         pm.send_filename( os.path.join( os.path.join( "gcode", "misc", ), "settings.gcode" ) )
 
         # Wait for the job to end, and stop listening
+        print "SettingsAction joining print job"
         pm.print_job.join()
+        print "SettingsAction print job complete"
         pm.serial_reader.remove_listener( listener )
         pm.serial_reader.add_listener( pm.listener )
 

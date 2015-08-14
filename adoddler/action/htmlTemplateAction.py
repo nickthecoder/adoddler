@@ -1,5 +1,6 @@
 from adoddler import configuration
 from adoddler.action import AbstractAction
+from adoddler.printer import PrinterStatus, JobStatus
 
 class HTMLTemplateAction( AbstractAction ) :
 
@@ -16,7 +17,9 @@ class HTMLTemplateAction( AbstractAction ) :
             "config": configuration,
             "pm": configuration.printer_manager,
             "handler": handler,
-            "job": configuration.printer_manager.print_job
+            "job": configuration.printer_manager.print_job,
+            "PrinterStatus" : PrinterStatus,
+            "JobStatus" : JobStatus
             }
 
     def get_GET( self, handler ) :

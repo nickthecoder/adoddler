@@ -20,6 +20,8 @@ class PrintJob( Thread ) :
         self.command_count = 0
 
     def send_filename( self, path, auto_disconnect = False ) :
+        print "*** Sending file :", path
+
         f = open(path, "r")
 
         # Count the number of commands
@@ -33,6 +35,7 @@ class PrintJob( Thread ) :
         self.send_file( f, auto_disconnect )
 
     def send_file( self, f, auto_disconnect = False ) :
+
         self.auto_disconnect = auto_disconnect
         self.input = f
         pm = configuration.printer_manager
@@ -51,29 +54,52 @@ class PrintJob( Thread ) :
     def cancel( self ) :
         if self.status == JobStatus.RUNNING :
             self.status = JobStatus.CANCELLING
+            print "## Print job status now CANCELLING"
 
     def run( self ) :
         print "***** Job started"
 
+        try :
+            pm = configuration.printer_manager
+            self.serial_reader = pm.serial_reader;
+            self.serial_reader.ok_count = 0
+            output = pm.connection
+            self.command_count = 0
+
+            for line in self.input :
+
+                # Let's not get too far ahead of ourselves!
+                while self.command_count - self.serial_reader.ok_count > 10 :
+                    if self.status == JobStatus.CANCELLING :
+                        break
+                    sleep( 0.1 )
+
+                if  self.status == JobStatus.CANCELLING :
+                    print "## Breaking out of the loop due to CANCELLING"
+                    break
+
+                line = self.tidy( line )
+                if line :
+                    print "<<", line
+                    output.write( line )
+                    output.write( "\n" )
+                    self.command_count += 1        
+
+        except Exception as e :
+            pm.errors.append( str( e ) )
+            self.cancel()
+            self.auto_disconnect = True
+
+        self.__end()
+
+    def __end( self ) :
+
         pm = configuration.printer_manager
-        self.serial_reader = pm.serial_reader;
-        self.serial_reader.ok_count = 0
-        output = pm.connection
-        self.command_count = 0
-
-        for line in self.input :
-            if  self.status == JobStatus.CANCELLING :
-                break
-            line = self.tidy( line )
-            if line :
-                # print "<<", line
-                output.write( line )
-                output.write( "\n" )
-                self.command_count += 1        
-
         self.input.close()
+        print "## Closed the input file"
 
         while self.__running() :
+            print "## PrintJob sleeping until oks tally", self.status == JobStatus.CANCELLING, self.command_count, self.serial_reader.ok_count
             sleep(1)
 
         print "*** ending job"
@@ -89,7 +115,7 @@ class PrintJob( Thread ) :
 
     def __running( self ) :
         if self.status == JobStatus.CANCELLING :
-            return false
+            return False
 
         return self.command_count > self.serial_reader.ok_count
 

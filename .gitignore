@@ -1,4 +1,5 @@
 *~
 *.pyc
 /web/camera.jpg
+/print
 /print/*

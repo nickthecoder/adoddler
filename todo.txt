@@ -1,4 +1,19 @@
 Add Z-Home button
-Turn off fans/motors etc on disconnect.
+Ensure other button only homes XY
+    G28 X Y F1800 and G28 Z F1800
 
+M1 Sleep
+M18 Disable all steppers
+
+Turn off fans/motors etc on disconnect?
+
+Add a timestamp for the temperature, and don't output it if its stale data.
+
+myplayerCameraAction : parameterise frame count. the 5th frame is better than the 3rd
+
+Test uvcCameraAction
+
+Count thelength of extrusion (G0,G1,G2,G3's "E" parameter - Are there others?)
+
+Ajax to update the progress without refreshing the page.
 

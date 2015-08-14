@@ -1,7 +1,8 @@
 
 class PrinterStatus:
-    IDLE = 0
-    ACTIVE = 1
-    DISCONNECTED = 2
-    PENDING = 3
+    DISCONNECTED = 0
+    CONNECTING = 1
+    IDLE = 2
+    ACTIVE = 3
+    PENDING = 4
 

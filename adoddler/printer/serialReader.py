@@ -29,13 +29,15 @@ class SerialReader( Thread ) :
                 pm.job_error( e )
 
     def process_line( self, line ) :
-        # print ">>", line
-        line = line.strip()
-        if line.startswith( 'ok' ):
+        stripped = line.strip( '\0' ).strip()
+        print ">>", stripped
+
+        if stripped.startswith( 'ok' ) :
             self.ok_count += 1
+            print "## SR ok count", self.ok_count
 
         for listener in self.listeners :
-            listener( line )
+            listener( stripped )
 
     def stop( self ) :
         self.stopping = True
