@@ -19,15 +19,14 @@ class PiCameraAction( AbstractAction ) :
 
         try :
             self.ensure_camera()
-            self.camera.capture('web/camera.jpg')
+            self.camera.capture( handler.wfile, 'jpeg' )
+            handler.wfile.close()
 
         except Exception as e :
             print "Failed to take a photo"
             print(traceback.format_exc())
             self.camera = None
-
-        # Use the default handler to send the image.
-        SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(handler)
+            self.error( handler, "Failed to take a photo" )
 
     def ensure_camera( self ) :
         if self.camera:
