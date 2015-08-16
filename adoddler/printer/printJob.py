@@ -19,6 +19,10 @@ class PrintJob( Thread ) :
         self.command_total = None
         self.command_count = 0
 
+        # Note, extrude_total is NOT set when send_file is used, only when send_filename is used.
+        self.extrude_total = None
+        self.extrude_count = 0
+
     def send_filename( self, path, auto_disconnect = False ) :
         print "*** Sending file :", path
 
@@ -26,13 +30,33 @@ class PrintJob( Thread ) :
 
         # Count the number of commands
         self.command_total = 0
+        self.extrude_total = 0
         for line in f :
             line = self.tidy( line )
             if line :
                 self.command_total += 1
+                self.extrude_total += self.parse_extrude( line )
         f.seek(0)
 
         self.send_file( f, auto_disconnect )
+
+    def parse_extrude( self, line ) :
+        try :
+            if line.startswith( "G" ) :
+                parts = line.split()
+                commandNumber = parts[0][1:]
+                if commandNumber in ["1","2","3","4"] :
+                    for i in range( 1, len( parts) ) :
+                        part = parts[i]
+                        if part.startswith( "E" ) :
+                            value = float(part[1:])
+                            return value
+
+        except Exception as e :
+            print "Failed to parseExtrude :", line
+            print e
+
+        return 0
 
     def send_file( self, f, auto_disconnect = False ) :
 
@@ -84,6 +108,7 @@ class PrintJob( Thread ) :
                     output.write( line )
                     output.write( "\n" )
                     self.command_count += 1        
+                    self.extrude_count += self.parse_extrude( line )
 
         except Exception as e :
             pm.errors.append( str( e ) )

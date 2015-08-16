@@ -1,18 +1,26 @@
 <div class="progress">
     <div class="progress_done" style="width: {{ (100 * job.serial_reader.ok_count / job.command_total) }}%"></div>
     <div class="progress_text">
-        {% if job.serial_reader.ok_count > 5000 %}
-            {{ (job.serial_reader.ok_count / 1000) | int }}k
+
+        <span id="extrude_count">
+        {% if job.extrude_count > 1000 %}
+            {{ (job.extrude_count / 1000) | int }}m
         {% else %}
-            {{ job.serial_reader.ok_count }}
+            {{ job.extrude_count | int }}mm
         {% endif %}
-        of
-        {% if job.command_total > 5000 %}
-            {{ (job.command_total / 1000) | int}}k
-        {% else %}
-            {{ job.command_total }}
+        </span>
+
+        {% if job.extrude_total %}
+            of
+            <span id="extrude_total">
+            {% if job.extrude_total > 1000 %}
+                {{ (job.extrude_total / 1000) | int}}m
+            {% else %}
+                {{ job.extrude_total | int}}mm
+            {% endif %}
+            </span>
         {% endif %}
-        
+
     </div>
 </div>
 

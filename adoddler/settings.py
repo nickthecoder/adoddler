@@ -32,8 +32,12 @@ configuration.register_action( "/changeSettingAjax", ChangeSettingAjaxAction() )
 configuration.register_action( "/error", HTMLTemplateAction('error.html') )
 
 # Comment these out if you don't have a camera
-configuration.register_action( "/camera", HTMLTemplateAction("camera.html") )
-configuration.register_action( "/camera.jpg", MPlayerCameraAction() )
+try :
+    import adoddle.action.picameraAction.PiCameraAction
+    configuration.register_action( "/camera.jpg", PiCameraAction() )
+    configuration.register_action( "/camera", HTMLTemplateAction("camera.html") )
+except :
+    print "Couldn't initialise PiCamera. Skipping.
 
 
 for filename in os.listdir("gcode") :
