@@ -33,9 +33,9 @@ form { margin: 0; padding: 0; }
 
 #navigate { width: 400px; margin: 0 auto; text-align: center; }
 
-#nav-e { padding-top: 35px; height: 250px; float: left; }
+#nav-e { padding-top: 50px; height: 250px; float: left; }
 #nav-z { height: 250px; float: right; }
-#nav-xy { padding-top: 20px; }
+#nav-xy { padding-top: 36px; }
 
 #footer { font-size: 80%; text-align: right; margin-top: 2em; }
 
