@@ -1,6 +1,6 @@
-<div class="progress">
-    <div class="progress_done" style="width: {{ (100 * job.serial_reader.ok_count / job.command_total) }}%"></div>
-    <div class="progress_text">
+<div id="progress">
+    <div id="progress_done" style="width: {{ (100 * job.serial_reader.ok_count / job.command_total) }}%"></div>
+    <div id="progress_text">
 
         <span id="extrude_count">
         {% if job.extrude_counter.count > 1000 %}

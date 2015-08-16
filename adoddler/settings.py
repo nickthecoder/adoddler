@@ -29,7 +29,9 @@ configuration.register_action( "/print", PrintAction("print.html") )
 configuration.register_action( "/delete", DeleteAction("delete.html") )
 configuration.register_action( "/cancel", CancelAction("cancel.html") )
 configuration.register_action( "/changeSettingAjax", ChangeSettingAjaxAction() )
+configuration.register_action( "/progressAjax", ProgressAjaxAction() )
 configuration.register_action( "/error", HTMLTemplateAction('error.html') )
+
 
 # Comment these out if you don't have a camera
 try :
