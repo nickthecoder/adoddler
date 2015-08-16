@@ -2,7 +2,7 @@ from time import sleep
 from threading import Thread
 
 from adoddler import configuration
-from adoddler.printer import JobStatus, PrinterStatus
+from adoddler.printer import JobStatus, PrinterStatus, ExtrudeCounter
 
 class PrintJob( Thread ) :
     """
@@ -21,42 +21,28 @@ class PrintJob( Thread ) :
 
         # Note, extrude_total is NOT set when send_file is used, only when send_filename is used.
         self.extrude_total = None
-        self.extrude_count = 0
+        self.extrude_counter = None
 
     def send_filename( self, path, auto_disconnect = False ) :
         print "*** Sending file :", path
 
         f = open(path, "r")
 
-        # Count the number of commands
+        # Count the number of commands and measure filament
         self.command_total = 0
         self.extrude_total = 0
+        extrude_counter = ExtrudeCounter()
+
         for line in f :
             line = self.tidy( line )
             if line :
                 self.command_total += 1
-                self.extrude_total += self.parse_extrude( line )
+        
+                extrude_counter.parse( line )
+        self.extrude_total = extrude_counter.count
+
         f.seek(0)
-
         self.send_file( f, auto_disconnect )
-
-    def parse_extrude( self, line ) :
-        try :
-            if line.startswith( "G" ) :
-                parts = line.split()
-                commandNumber = parts[0][1:]
-                if commandNumber in ["1","2","3","4"] :
-                    for i in range( 1, len( parts) ) :
-                        part = parts[i]
-                        if part.startswith( "E" ) :
-                            value = float(part[1:])
-                            return value
-
-        except Exception as e :
-            print "Failed to parseExtrude :", line
-            print e
-
-        return 0
 
     def send_file( self, f, auto_disconnect = False ) :
 
@@ -89,6 +75,7 @@ class PrintJob( Thread ) :
             self.serial_reader.ok_count = 0
             output = pm.connection
             self.command_count = 0
+            self.extrude_counter = ExtrudeCounter()
 
             for line in self.input :
 
@@ -108,7 +95,7 @@ class PrintJob( Thread ) :
                     output.write( line )
                     output.write( "\n" )
                     self.command_count += 1        
-                    self.extrude_count += self.parse_extrude( line )
+                    self.extrude_counter.parse( line )
 
         except Exception as e :
             pm.errors.append( str( e ) )

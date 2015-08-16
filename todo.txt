@@ -1,4 +1,4 @@
-Count thelength of extrusion (G0,G1,G2,G3's "E" parameter - Are there others?)
+Count the length of extrusion (G0,G1,G2,G3's "E" parameter - Are there others?)
     Look for "absolute" M82 / "relative" M83
     Look for reset G92 Ennn
 
@@ -14,10 +14,6 @@ Turn off fans/motors etc on disconnect?
 Add a timestamp for the temperature, and don't output it if its stale data.
 
 myplayerCameraAction : parameterise frame count. the 5th frame is better than the 3rd
-
-Test uvcCameraAction
-
-
 
 Ajax to update the progress without refreshing the page.
 

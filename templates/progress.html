@@ -3,10 +3,10 @@
     <div class="progress_text">
 
         <span id="extrude_count">
-        {% if job.extrude_count > 1000 %}
-            {{ (job.extrude_count / 1000) | int }}m
+        {% if job.extrude_counter.count > 1000 %}
+            {{ (job.extrude_counter.count / 1000) | int }}m
         {% else %}
-            {{ job.extrude_count | int }}mm
+            {{ (job.extrude_counter.count / 10) | int }}cm
         {% endif %}
         </span>
 
@@ -16,7 +16,7 @@
             {% if job.extrude_total > 1000 %}
                 {{ (job.extrude_total / 1000) | int}}m
             {% else %}
-                {{ job.extrude_total | int}}mm
+                {{ (job.extrude_total / 10) | int}}cm
             {% endif %}
             </span>
         {% endif %}
