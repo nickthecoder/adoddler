@@ -34,19 +34,24 @@ class PrinterManager :
         if self.status != PrinterStatus.IDLE :
             raise Exception( "Printer is not IDLE" )
 
-
     def connect( self ) :
         if self.status == PrinterStatus.DISCONNECTED :
 
-            
-            self.status = PrinterStatus.CONNECTING
-            self.connection = self.connector.connect()
+            try :
+                self.status = PrinterStatus.CONNECTING
+                self.connection = self.connector.connect()
+            except :
+                self.status = PrinterStatus.DISCONNECTED
+                return
+
             self.serial_reader = SerialReader( self.connection )
             self.serial_reader.start()
             
             self.listener = lambda line : self.process_line( line )
             self.serial_reader.add_listener( self.listener )
 
+            # Give the printer a time to start up
+            sleep( 2 )
             self.status = PrinterStatus.IDLE
 
     def process_line( self, line ) :

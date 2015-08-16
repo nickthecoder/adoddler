@@ -5,6 +5,4 @@ Turn off fans/motors etc on disconnect?
 
 Add a timestamp for the temperature, and don't output it if its stale data.
 
-Ajax to update the progress without refreshing the page.
-
 Plug in printer AFTER web start, and it gets in a state!
