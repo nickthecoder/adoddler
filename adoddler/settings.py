@@ -33,11 +33,11 @@ configuration.register_action( "/error", HTMLTemplateAction('error.html') )
 
 # Comment these out if you don't have a camera
 try :
-    import adoddle.action.picameraAction.PiCameraAction
+    from adoddler.action.piCameraAction import PiCameraAction
     configuration.register_action( "/camera.jpg", PiCameraAction() )
     configuration.register_action( "/camera", HTMLTemplateAction("camera.html") )
-except :
-    print "Couldn't initialise PiCamera. Skipping.
+except Exception as e :
+    print "Couldn't initialise PiCamera. Skipping.", e
 
 
 for filename in os.listdir("gcode") :
