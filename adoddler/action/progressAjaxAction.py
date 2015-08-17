@@ -32,5 +32,5 @@ class ProgressAjaxAction( AbstractAction ) :
 
         if pm.status == PrinterStatus.IDLE :
             path = os.path.join( os.path.join( "gcode", "misc", ), "idle.gcode" )
-            pm.send( path )
+            pm.send( path, is_short=True )
             

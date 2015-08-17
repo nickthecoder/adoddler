@@ -12,7 +12,7 @@ function convert_navigation()
 function convert_button( button )
 {
     button.onclick = function() {
-        Net.post( {url: "/gcodeAjax", responseType: "text", vars: {gcode: button.value}, onsuccess: gcodeok });
+        Net.post( {url: "/gcodeAjax", responseType: "text", vars: {gcode: button.value, short: 1}, onsuccess: gcodeok });
         return false;
     }
 }

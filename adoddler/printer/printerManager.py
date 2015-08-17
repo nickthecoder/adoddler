@@ -112,13 +112,30 @@ class PrinterManager :
         self.status = PrinterStatus.DISCONNECTED
 
 
-    def send( self, f, auto_disconnect = False ) :
+    def send( self, f, auto_disconnect=False, is_short=False ) :
         self.ensure_connected()
 
         if self.status == PrinterStatus.IDLE :
-            PrintJob( f, auto_disconnect ).send()
+            job = PrintJob( f, auto_disconnect, is_short )
+            if self.print_job is None :
+                job.send()
+            else :
+                # We are currently processing a short job, so queue this one.
+                self.queue.append( job )
+                if not is_short :
+                    self.queue_only_short = False
         else :
             raise Exception( "Printer not idle" )
+
+    def job_ended( self ) :
+
+        if len( self.queue ) > 0 :
+            job = self.queue[0]
+            del( self.queue[0] )
+            if len( self.queue ) == 0 :
+                self.queue_only_short = True
+            print "Sending a queued job"
+            job.send()
 
     def cancel( self ) :
         if self.print_job :

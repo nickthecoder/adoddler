@@ -7,7 +7,7 @@ class AbstractGCodeAction( AbstractAction ) :
 
     def do_POST(self, handler) :
 
-        snippets = handler.parameters["gcode"]
+        snippets = handler.parameters.get("gcode")
         if not snippets :
             self.error( handler, "Parameter 'gcode' is missing" )
 
@@ -17,8 +17,9 @@ class AbstractGCodeAction( AbstractAction ) :
             self.error( handler, "Invalid gcode name (contains '..')" )
             return
 
+        short = handler.parameters.get("short") is not None
         path = os.path.join( "gcode", snippet + ".gcode" )
-        configuration.printer_manager.send( path )
+        configuration.printer_manager.send( path, is_short=short )
 
         # Child classes will do more after this.
 
