@@ -9,11 +9,12 @@ class PrintJob( Thread ) :
     Sends gcode to the printer.
     """
 
-    def __init__( self ) :
+    def __init__( self, fileOrPath, auto_disconnect = False ) :
+
         Thread.__init__( self )
         self.status = JobStatus.CREATED
         self.input = None
-        self.auto_disconnect = False
+        self.auto_disconnect = auto_disconnect
 
         # Note, command_total is NOT set when sending from a filename
         self.command_total = None
@@ -23,37 +24,30 @@ class PrintJob( Thread ) :
         self.extrude_total = None
         self.extrude_counter = None
 
-    def send( self, fileOrPath, auto_disconnect = False ) :
-
         if type( fileOrPath ) == str :
-            print "*** Sending file :", fileOrPath
-            f = open(fileOrPath, "r")
+            print "*** GCode file :", fileOrPath
+            self.input = open(fileOrPath, "r")
 
             # Count the number of commands and measure filament
             self.command_total = 0
             self.extrude_total = 0
             extrude_counter = ExtrudeCounter()
 
-            for line in f :
+            for line in self.input :
                 line = self.tidy( line )
                 if line :
                     self.command_total += 1
             
                     extrude_counter.parse( line )
             self.extrude_total = extrude_counter.count
+            self.input.seek(0)
 
-            f.seek(0)
-            self._send_file( f, auto_disconnect )
-        
         else :
-            self._send_file( fileOrPath, auto_disconnect )
+            self.input = fileOrPath
 
-    def _send_file( self, f, auto_disconnect = False ) :
+    def send( self ) :
 
-        self.auto_disconnect = auto_disconnect
-        self.input = f
         pm = configuration.printer_manager
-
         pm.ensure_idle()
 
         if pm.status == PrinterStatus.IDLE :

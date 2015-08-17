@@ -19,6 +19,8 @@ class PrinterManager :
         self.messages = []
         self.warnings = []
         self.errors = []
+        self.queue = []
+        self.queue_only_short = True
 
     # Return the previous temperature reading, but if it was a while ago, then
     # ignore the stale value and return None instead.
@@ -114,7 +116,7 @@ class PrinterManager :
         self.ensure_connected()
 
         if self.status == PrinterStatus.IDLE :
-            PrintJob().send( f, auto_disconnect )
+            PrintJob( f, auto_disconnect ).send()
         else :
             raise Exception( "Printer not idle" )
 
