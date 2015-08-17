@@ -20,10 +20,12 @@ class ProgressAjaxAction( AbstractAction ) :
         job = pm.print_job
 
         if job is None :
-            handler.wfile.write( "done" )
-            return
+            handler.wfile.write( "done done" )
+        else :
+            handler.wfile.write( str( job.extrude_counter.count ) )
+            handler.wfile.write( " " )
+            handler.wfile.write( str( job.extrude_total ) )
 
-        handler.wfile.write( str( job.extrude_counter.count ) )
         handler.wfile.write( " " )
-        handler.wfile.write( str( job.extrude_total ) )
+        handler.wfile.write( str( pm.temperature ) )
 

@@ -27,7 +27,7 @@ class PrinterManager :
         if self._temperature_datetime is None :
             return None
 
-        if ( datetime.datetime.now() - self._temperature_datetime ).seconds < 10 :
+        if ( datetime.datetime.now() - self._temperature_datetime ).seconds < 20 :
             return self._temperature
 
         return None

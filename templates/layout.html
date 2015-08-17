@@ -13,19 +13,21 @@
             <a href="/"><button class="go">Home</button></a>&nbsp;
         </div>
 
-        <div class="item">
-            <a href="/settings"><button class="go">Settings</button></a>&nbsp;
-        </div>
-
         {% if config.registered_actions['/camera'] %}
         <div class="item">
             <a href="/camera"><button class="go">Camera</button></a>&nbsp;
         </div>
         {% endif %}
 
+        {% if pm.status == PrinterStatus.IDLE %}
+        <div class="item">
+            <a href="/settings"><button class="go">Settings</button></a>&nbsp;
+        </div>
+
         <div class="item">
             <a href="/folder"><button class="action">Print...</button></a>&nbsp;
         </div>
+        {% endif %}
 
         <div class="item" id="printer_status">
             {% if pm.status == PrinterStatus.IDLE %}
@@ -45,11 +47,11 @@
     </div>
 
     <h1>{% block h1 %}Adoddler{% endblock %}</h1>
-    {% if pm.temperature %}
-        <div class="item">
+    <div id="extruder_temperature">
+        {% if pm.temperature %}
             Extruder : {{ pm.temperature }}°C
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
     {% block content %}
     {% endblock %}
 
