@@ -5,6 +5,7 @@ from time import sleep
 
 from adoddler import configuration
 from adoddler.action import AbstractAction
+from adoddler.printer import PrinterStatus
 
 class ProgressAjaxAction( AbstractAction ) :
 
@@ -29,3 +30,7 @@ class ProgressAjaxAction( AbstractAction ) :
         handler.wfile.write( " " )
         handler.wfile.write( str( pm.temperature ) )
 
+        if pm.status == PrinterStatus.IDLE :
+            path = os.path.join( os.path.join( "gcode", "misc", ), "idle.gcode" )
+            pm.send_filename( path )
+            
