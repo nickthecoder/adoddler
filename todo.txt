@@ -1,3 +1,13 @@
+Queue short commands (nav and temp request)
+    Don't show progress for these short commands
+    Buttons should appear as if the printer where idle
+        
+    When given a short command, keep the status at idle
+    Print job tell pm when it is finished
+        pm sets its status to idle if the queue is empty
+        otherwise it keeps the same status and begins the next job.
+
+
 Turn off fans/motors etc on disconnect?
     M1 Sleep
     M18 Disable all steppers

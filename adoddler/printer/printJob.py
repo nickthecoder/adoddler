@@ -15,36 +15,40 @@ class PrintJob( Thread ) :
         self.input = None
         self.auto_disconnect = False
 
-        # Note, command_total is NOT set when send_file is used, only when send_filename is used.
+        # Note, command_total is NOT set when sending from a filename
         self.command_total = None
         self.command_count = 0
 
-        # Note, extrude_total is NOT set when send_file is used, only when send_filename is used.
+        # Note, extrude_total is NOT set when sending from a filename
         self.extrude_total = None
         self.extrude_counter = None
 
-    def send_filename( self, path, auto_disconnect = False ) :
-        print "*** Sending file :", path
+    def send( self, fileOrPath, auto_disconnect = False ) :
 
-        f = open(path, "r")
+        if type( fileOrPath ) == str :
+            print "*** Sending file :", fileOrPath
+            f = open(fileOrPath, "r")
 
-        # Count the number of commands and measure filament
-        self.command_total = 0
-        self.extrude_total = 0
-        extrude_counter = ExtrudeCounter()
+            # Count the number of commands and measure filament
+            self.command_total = 0
+            self.extrude_total = 0
+            extrude_counter = ExtrudeCounter()
 
-        for line in f :
-            line = self.tidy( line )
-            if line :
-                self.command_total += 1
+            for line in f :
+                line = self.tidy( line )
+                if line :
+                    self.command_total += 1
+            
+                    extrude_counter.parse( line )
+            self.extrude_total = extrude_counter.count
+
+            f.seek(0)
+            self._send_file( f, auto_disconnect )
         
-                extrude_counter.parse( line )
-        self.extrude_total = extrude_counter.count
+        else :
+            self._send_file( fileOrPath, auto_disconnect )
 
-        f.seek(0)
-        self.send_file( f, auto_disconnect )
-
-    def send_file( self, f, auto_disconnect = False ) :
+    def _send_file( self, f, auto_disconnect = False ) :
 
         self.auto_disconnect = auto_disconnect
         self.input = f

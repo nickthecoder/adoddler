@@ -15,6 +15,6 @@ class IdleAction( HTMLTemplateAction ) :
 
         if pm.status == PrinterStatus.IDLE :
             path = os.path.join( os.path.join( "gcode", "misc", ), "idle.gcode" )
-            pm.send_filename( path )
+            pm.send( path )
 
 

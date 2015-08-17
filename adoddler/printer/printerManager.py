@@ -110,19 +110,11 @@ class PrinterManager :
         self.status = PrinterStatus.DISCONNECTED
 
 
-    def send_file( self, f, auto_disconnect = False ) :
+    def send( self, f, auto_disconnect = False ) :
         self.ensure_connected()
 
         if self.status == PrinterStatus.IDLE :
-            PrintJob().send_file( f, auto_disconnect )
-        else :
-            raise Exception( "Printer not idle" )
-
-    def send_filename( self, path, auto_disconnect = False ) :
-        self.ensure_connected()
-
-        if self.status == PrinterStatus.IDLE :
-            PrintJob().send_filename( path, auto_disconnect )
+            PrintJob().send( f, auto_disconnect )
         else :
             raise Exception( "Printer not idle" )
 

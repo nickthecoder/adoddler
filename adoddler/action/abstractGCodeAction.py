@@ -18,7 +18,7 @@ class AbstractGCodeAction( AbstractAction ) :
             return
 
         path = os.path.join( "gcode", snippet + ".gcode" )
-        configuration.printer_manager.send_filename( path )
+        configuration.printer_manager.send( path )
 
         # Child classes will do more after this.
 
