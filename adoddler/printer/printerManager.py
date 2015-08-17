@@ -1,5 +1,6 @@
 import os
 from time import sleep
+import datetime
 
 from adoddler.printer import SerialReader, PrintJob, PrinterStatus
 
@@ -13,11 +14,23 @@ class PrinterManager :
 
         self.print_job = None
         self.serial_reader = None
-        self.temperature = None
+        self._temperature = None
+        self._temperature_datetime = None
         self.messages = []
         self.warnings = []
         self.errors = []
 
+    # Return the previous temperature reading, but if it was a while ago, then
+    # ignore the stale value and return None instead.
+    @property
+    def temperature( self ) :
+        if self._temperature_datetime is None :
+            return None
+
+        if ( datetime.datetime.now() - self._temperature_datetime ).seconds < 10 :
+            return self._temperature
+
+        return None
 
     def clear_messages( self ) :
         self.messages = []
@@ -58,14 +71,17 @@ class PrinterManager :
         if line == "start" and self.status == PrinterStatus.CONNECTING :
             self.status = PrinterStatus.IDLE
 
-        if line.startswith( "T:" ) :
+        if line.startswith( "T:" ):
             parts = line.split( " " )
             bits = parts[0].split( ":" )
-            self.temperature = float( bits[1] )
+            self._temperature = float( bits[1] )
+            self._temperature_datetime = datetime.datetime.now()
         elif line.startswith( "ok T:" ) :
             parts = line.split( " " )
             bits = parts[1].split( ":" )
-            self.temperature = float( bits[1] )
+            self._temperature = float( bits[1] )
+            self._temperature_datetime = datetime.datetime.now()
+
         elif line.startswith( "echo: " ) :
             self.warnings.append( line[6:] )
 
@@ -73,8 +89,6 @@ class PrinterManager :
     def disconnect( self ) :
 
         self.status = PrinterStatus.PENDING
-
-        self.temperature = None
 
         if self.print_job :
             self.print_job.cancel()

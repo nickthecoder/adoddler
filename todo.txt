@@ -1,8 +1,8 @@
-M1 Sleep
-M18 Disable all steppers
-
-Turn off fans/motors etc on disconnect?
 
 Add a timestamp for the temperature, and don't output it if its stale data.
 
-Plug in printer AFTER web start, and it gets in a state!
+Turn off fans/motors etc on disconnect?
+    M1 Sleep
+    M18 Disable all steppers
+
+
