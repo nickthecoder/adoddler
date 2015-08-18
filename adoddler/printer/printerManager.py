@@ -112,11 +112,11 @@ class PrinterManager :
         self.status = PrinterStatus.DISCONNECTED
 
 
-    def send( self, f, auto_disconnect=False, is_short=False ) :
+    def send( self, f, is_short=False ) :
         self.ensure_connected()
 
         if self.status == PrinterStatus.IDLE :
-            job = PrintJob( f, auto_disconnect, is_short )
+            job = PrintJob( f, is_short )
             if self.print_job is None :
                 job.send()
             else :

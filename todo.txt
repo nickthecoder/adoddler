@@ -1,5 +1,5 @@
 
-Remove the autodisconnect stuff?
+total is in int(meters), but count is in mm.
 
 Turn off fans/motors etc on disconnect?
     M1 Sleep

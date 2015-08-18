@@ -9,12 +9,11 @@ class PrintJob( Thread ) :
     Sends gcode to the printer.
     """
 
-    def __init__( self, fileOrPath, auto_disconnect=False, is_short=False ) :
+    def __init__( self, fileOrPath, is_short=False ) :
 
         Thread.__init__( self )
         self.status = JobStatus.CREATED
         self.input = None
-        self.auto_disconnect = auto_disconnect
         self.is_short = is_short
 
         # Note, command_total is NOT set when sending from a filename
@@ -100,7 +99,6 @@ class PrintJob( Thread ) :
         except Exception as e :
             pm.errors.append( str( e ) )
             self.cancel()
-            self.auto_disconnect = True
 
         self.__end()
 
@@ -119,11 +117,6 @@ class PrintJob( Thread ) :
         pm.print_job = None
         self.status = JobStatus.ENDED
         pm.job_ended()
-
-        if self.auto_disconnect :
-            self.serial_reader.stop()
-            pm.disconnect()
-
         print "***** Job finished"
 
     def __running( self ) :
