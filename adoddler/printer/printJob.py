@@ -15,6 +15,7 @@ class PrintJob( Thread ) :
         self.status = JobStatus.CREATED
         self.input = None
         self.is_short = is_short
+        self.paused = False
 
         # Note, command_total is NOT set when sending from a filename
         self.command_total = None
@@ -63,7 +64,18 @@ class PrintJob( Thread ) :
     def cancel( self ) :
         if self.status == JobStatus.RUNNING :
             self.status = JobStatus.CANCELLING
+            self.paused = False
             print "## Print job status now CANCELLING"
+
+
+    def pause( self ) :
+        self.paused = True
+        self.__tally_oks()
+
+
+    def resume( self ) :
+        self.paused = False
+
 
     def run( self ) :
         print "***** Job started"
@@ -79,7 +91,10 @@ class PrintJob( Thread ) :
             for line in self.input :
 
                 # Let's not get too far ahead of ourselves!
-                while self.command_count - self.serial_reader.ok_count > 10 :
+                while self.command_count - self.serial_reader.ok_count > 1 : # MORE Allow more than 1??
+                    while self.paused :
+                        sleep( 1 );
+
                     if self.status == JobStatus.CANCELLING :
                         break
                     sleep( 0.1 )
@@ -96,11 +111,22 @@ class PrintJob( Thread ) :
                     self.command_count += 1        
                     self.extrude_counter.parse( line )
 
+            while self.paused :
+                sleep( 1 );
+
         except Exception as e :
             pm.errors.append( str( e ) )
             self.cancel()
 
         self.__end()
+
+
+    def __tally_oks( self ) :
+
+        while self.__running() :
+            print "## PrintJob sleeping until oks tally", self.status == JobStatus.CANCELLING, self.command_count, self.serial_reader.ok_count
+            sleep(1)
+
 
     def __end( self ) :
 
@@ -108,9 +134,7 @@ class PrintJob( Thread ) :
         self.input.close()
         print "## Closed the input file"
 
-        while self.__running() :
-            print "## PrintJob sleeping until oks tally", self.status == JobStatus.CANCELLING, self.command_count, self.serial_reader.ok_count
-            sleep(1)
+        self.__tally_oks()
 
         print "*** ending job"
         pm.status = PrinterStatus.IDLE

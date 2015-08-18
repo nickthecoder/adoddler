@@ -5,4 +5,5 @@ class PrinterStatus:
     IDLE = 2
     ACTIVE = 3
     PENDING = 4
+    PAUSED = 5
 

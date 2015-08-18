@@ -127,6 +127,24 @@ class PrinterManager :
         else :
             raise Exception( "Printer not idle" )
 
+    def pause( self ) :
+        
+        if self.status != PrinterStatus.ACTIVE :
+            raise Exception( "Printer not idle" )
+
+        print "PM Pausing"
+        self.status = PrinterStatus.PAUSED
+        self.print_job.pause()
+
+
+    def resume( self ) :
+        if self.status != PrinterStatus.PAUSED :
+            raise Exception( "Printer not paused" )
+
+        print "PM Resuming"
+        self.print_job.resume()
+        self.status = PrinterStatus.ACTIVE
+
     def job_ended( self ) :
 
         if len( self.queue ) > 0 :

@@ -35,6 +35,11 @@
                     <button class="danger" name="disconnect">Disconnect</button>&nbsp;
                 </form>
             {% endif %}
+            {% if pm.status == PrinterStatus.PAUSED %}
+                <form action="/resume" method="post">
+                    <button class="go" name="resume">Resume</button>&nbsp;
+                </form>
+            {% endif %}
             {% if pm.status == PrinterStatus.ACTIVE %}
                 <a href="/"><button class="go">Active</button></a>&nbsp;
             {% endif %}

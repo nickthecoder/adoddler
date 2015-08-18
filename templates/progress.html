@@ -25,6 +25,15 @@
 </div>
 
 <div class="options">
+    {% if job.paused %}
+        <form action="/resume" method="post">
+            <button class="" name="resume" value="resume">Resume</button>
+        </form>
+    {% else %}
+        <form action="/pause" method="post">
+            <button class="" name="pause" value="pause">Pause</button>
+        </form>
+    {% endif %}
     <form action="/cancel" method="post">
         <button class="danger" name="cancel" value="cancel">Cancel</button>
     </form>

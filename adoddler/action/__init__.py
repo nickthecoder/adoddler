@@ -14,4 +14,6 @@ from deleteAction import DeleteAction
 from cancelAction import CancelAction
 from changeSettingAjaxAction import ChangeSettingAjaxAction
 from progressAjaxAction import ProgressAjaxAction
+from pauseAction import PauseAction
+from resumeAction import ResumeAction
 
