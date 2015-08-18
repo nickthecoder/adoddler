@@ -4,9 +4,9 @@
 
         <span id="extrude_count">
         {% if job.extrude_counter.count > 1000 %}
-            {{ (job.extrude_counter.count / 1000) | int }}m
+            {{ (job.extrude_counter.count / 10) | int / 100 }}m
         {% else %}
-            {{ (job.extrude_counter.count / 10) | int }}cm
+            {{ (job.extrude_counter.count | int ) / 10  }}cm
         {% endif %}
         </span>
 
@@ -14,9 +14,9 @@
             of
             <span id="extrude_total">
             {% if job.extrude_total > 1000 %}
-                {{ (job.extrude_total / 1000) | int}}m
+                {{ (job.extrude_total / 10) | int / 100}}m
             {% else %}
-                {{ (job.extrude_total / 10) | int}}cm
+                {{ (job.extrude_total | int ) / 10 }}cm
             {% endif %}
             </span>
         {% endif %}

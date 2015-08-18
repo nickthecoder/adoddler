@@ -1,6 +1,4 @@
 
-total is in int(meters), but count is in mm.
-
 Turn off fans/motors etc on disconnect?
     M1 Sleep
     M18 Disable all steppers
