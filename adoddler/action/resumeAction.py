@@ -8,7 +8,7 @@ from adoddler.printer import PrinterStatus
 class ResumeAction( AbstractAction ) :
 
     def do_POST( self, handler ) :
-        
+        print "ResumeAction"        
         pm = configuration.printer_manager
         if pm.status == PrinterStatus.PAUSED :
             pm.resume()

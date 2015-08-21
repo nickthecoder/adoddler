@@ -71,7 +71,10 @@ class PrintJob( Thread ) :
     def pause( self ) :
         self.paused = True
         self.__tally_oks()
-
+        # Find out the position of X,Y,Z and E
+        output.write( "M114\n" )
+        self.command_count += 1
+        self.__tally_oks()
 
     def resume( self ) :
         self.paused = False

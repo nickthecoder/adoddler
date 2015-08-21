@@ -1,3 +1,8 @@
+Pause the printer
+    Allow navigation while paused
+        Remember the current position, and return here on 
+    Run some standard code on pause and on resume.
+
 
 Turn off fans/motors etc on disconnect?
     M1 Sleep
