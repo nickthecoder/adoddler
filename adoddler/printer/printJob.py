@@ -48,18 +48,9 @@ class PrintJob( Thread ) :
 
     def send( self ) :
 
-        pm = configuration.printer_manager
-        pm.ensure_idle()
-
-        if pm.status == PrinterStatus.IDLE :
-
-            if not self.is_short :
-                print "*** Setting to active"
-                pm.status = PrinterStatus.ACTIVE
-            pm.print_job = self
-            self.status = JobStatus.RUNNING
-            print "*** start thread"
-            self.start()
+        self.status = JobStatus.RUNNING
+        print "*** start thread"
+        self.start()
         
     def cancel( self ) :
         if self.status == JobStatus.RUNNING :
@@ -196,10 +187,8 @@ class PrintJob( Thread ) :
         self.__tally_oks()
 
         print "*** ending job"
-        pm.status = PrinterStatus.IDLE
-        pm.print_job = None
         self.status = JobStatus.ENDED
-        pm.job_ended()
+        pm.job_ended( self )
         print "***** Job finished"
 
     def __running( self ) :

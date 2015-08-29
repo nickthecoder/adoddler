@@ -117,8 +117,14 @@ class PrinterManager :
 
         if self.status == PrinterStatus.IDLE :
             job = PrintJob( f, is_short )
+
             if self.print_job is None :
                 job.send()
+                self.print_job = job
+                print "*** Setting to active"
+                self.status = PrinterStatus.ACTIVE
+
+
             else :
                 # We are currently processing a short job, so queue this one.
                 self.queue.append( job )
@@ -145,15 +151,21 @@ class PrinterManager :
         self.print_job.resume()
         self.status = PrinterStatus.ACTIVE
 
-    def job_ended( self ) :
 
-        if len( self.queue ) > 0 :
-            job = self.queue[0]
-            del( self.queue[0] )
-            if len( self.queue ) == 0 :
-                self.queue_only_short = True
-            print "Sending a queued job"
-            job.send()
+    def job_ended( self, job ) :
+
+        if ( job == self.print_job ) :
+            self.print_job = None
+            self.status = PrinterStatus.IDLE
+
+            if len( self.queue ) > 0 :
+                job = self.queue[0]
+                del( self.queue[0] )
+                if len( self.queue ) == 0 :
+                    self.queue_only_short = True
+                print "Sending a queued job"
+                job.send()
+
 
     def cancel( self ) :
         if self.print_job :
