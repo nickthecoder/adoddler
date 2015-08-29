@@ -69,16 +69,72 @@ class PrintJob( Thread ) :
 
 
     def pause( self ) :
+        print "~~~~~~~~~~~ Pausing ~~~~~~~~~~~~"
         self.paused = True
-        self.__tally_oks()
-        # Find out the position of X,Y,Z and E
-        output.write( "M114\n" )
-        self.command_count += 1
-        self.__tally_oks()
+        self.__tally_oks() # Wait for existing command(s) to finish
+        self.paused_relative = self.extrude_counter.relative
+        self.paused_position = None
+
+        print "~~~ Paused ish"
+
+        self.serial_reader.add_listener( self.parse_position )
+        self.send_command( "M114", True ) # Get current position.
+        self.serial_reader.remove_listener( self.parse_position )
+        print "~~~Pos", self.paused_position
+        print "~~~Relative?", self.paused_relative
 
     def resume( self ) :
+        self.send_command( "G90" ) # Absolute positioning
+        if self.paused_position is not None :
+            x = self.paused_position[0]
+            y = self.paused_position[1]
+            z = self.paused_position[2]
+            if x is not None and y is not None and z is not None :
+                self.send_command( "G0 X" + str(x) + " Y" + str(y) + " Z" + str(z) )
+
+        if self.paused_relative :
+            self.send_command( "G91" ) # Set to relative positioning
+
+        # If we have manually extrudeded extra filament during pause, then set the value back,
+        # so that extra filament isn't counted for the remainder of the print.
+        if self.paused_position and self.paused_position[3] is not None :
+            print "~~~Setting extrusion position to", self.paused_position[3]
+            self.send_command( "G92 E" + str( self.paused_position[3] ) )
+
         self.paused = False
 
+    def send_command( self, command, wait=True ) :
+        print "Sending command", command, wait
+        configuration.printer_manager.connection.write( command + "\n" )
+        self.command_count += 1        
+        if wait :
+            self.__tally_oks()
+        print"Sent command", command
+
+
+    def parse_position( self, line ) :
+        print "~~~Pause parsing line", line
+        if line.startswith( "X:") :
+            x = None
+            y = None
+            z = None
+            e = None
+            parts = line.split(" ")
+            print "Parts", parts
+            for part in parts :
+                subs = part.split( ":" )
+                print "Subs", subs
+                if subs[0] == 'X' and x is None :
+                    x = float( subs[1] )
+                if subs[0] == 'Y' and y is None :
+                    y = float( subs[1] )
+                if subs[0] == 'Z' and z is None :
+                    z = float( subs[1] )
+                if subs[0] == 'E' and e is None :
+                    e = float( subs[1] )
+            self.paused_position = ( x, y, z, e )
+            print "~~~Pause found position", self.paused_position
+        print "End parse_position"
 
     def run( self ) :
         print "***** Job started"

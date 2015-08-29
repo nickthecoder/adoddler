@@ -1,3 +1,6 @@
+import sys
+import traceback
+
 from time import sleep
 from threading import Thread
 
@@ -37,7 +40,10 @@ class SerialReader( Thread ) :
             print "## SR ok count", self.ok_count
 
         for listener in self.listeners :
-            listener( stripped )
+            try :
+                listener( stripped )
+            except :
+                print(traceback.format_exc())
 
     def stop( self ) :
         self.stopping = True

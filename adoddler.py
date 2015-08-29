@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-
+import sys
+import traceback
 import datetime
 import os
 import posixpath
@@ -38,6 +39,7 @@ class AdoddlerHandler( SimpleHTTPServer.SimpleHTTPRequestHandler ) :
                 self.serving_static = True
                 SimpleHTTPServer.SimpleHTTPRequestHandler.do_HEAD(self)
         except Exception as e :
+            print(traceback.format_exc())
             self.error( e )
             
         
@@ -57,7 +59,9 @@ class AdoddlerHandler( SimpleHTTPServer.SimpleHTTPRequestHandler ) :
                 self.serving_static = True
                 SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
         except Exception as e :
+            print(traceback.format_exc())
             self.error( e )
+            
     
     def do_POST(self) :
         try :
@@ -78,6 +82,7 @@ class AdoddlerHandler( SimpleHTTPServer.SimpleHTTPRequestHandler ) :
                 self.serving_static = True
                 SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
         except Exception as e :
+            print(traceback.format_exc())
             self.error( e )
     
     def error( self, e ) :

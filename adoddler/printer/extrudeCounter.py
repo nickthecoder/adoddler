@@ -39,11 +39,9 @@ class ExtrudeCounter :
 
                     if self.relative :
                         self.count += e
-                        print "Adding A ", e, self.count
 
                     else :
                         self.count += e - self.previous
-                        print "Adding B ", e - self.previous, self.count
                         self.previous = e
 
     # Look for an "E" value within the parts array
