@@ -1,4 +1,5 @@
 import os
+import traceback
 
 from time import sleep
 
@@ -30,4 +31,5 @@ class GCodeAjaxAction( AbstractGCodeAction ) :
         
         except Exception as e :
             handler.wfile.write( "Failed : " + str( e ) )
+            print(traceback.format_exc())
     

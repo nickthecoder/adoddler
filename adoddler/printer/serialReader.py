@@ -16,7 +16,6 @@ class SerialReader( Thread ) :
         Thread.__init__( self )
         self.connection = connection
         self.stopping = False
-        self.ok_count = 0
         self.listeners = []
 
     def run( self ) :
@@ -34,10 +33,6 @@ class SerialReader( Thread ) :
     def process_line( self, line ) :
         stripped = line.strip( '\0' ).strip()
         print ">>", stripped
-
-        if stripped.startswith( 'ok' ) :
-            self.ok_count += 1
-            print "## SR ok count", self.ok_count
 
         for listener in self.listeners :
             try :

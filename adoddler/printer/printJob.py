@@ -16,6 +16,8 @@ class PrintJob( Thread ) :
         self.input = None
         self.is_short = is_short
         self.paused = False
+        self.paused_short_job = None # A job which can be popped off the queue while this is paused.
+        self.ok_count = 0
 
         # Note, command_total is NOT set when sending from a filename
         self.command_total = None
@@ -53,6 +55,9 @@ class PrintJob( Thread ) :
         self.start()
         
     def cancel( self ) :
+        if self.paused_short_job is not None :
+            self.paused_short_job.cancel()
+
         if self.status == JobStatus.RUNNING :
             self.status = JobStatus.CANCELLING
             self.paused = False
@@ -63,6 +68,7 @@ class PrintJob( Thread ) :
         print "~~~~~~~~~~~ Pausing ~~~~~~~~~~~~"
         self.paused = True
         self.__tally_oks() # Wait for existing command(s) to finish
+        self.serial_reader.remove_listener( self.listen )
         self.paused_relative = self.extrude_counter.relative
         self.paused_position = None
 
@@ -73,6 +79,7 @@ class PrintJob( Thread ) :
         self.serial_reader.remove_listener( self.parse_position )
         print "~~~Pos", self.paused_position
         print "~~~Relative?", self.paused_relative
+
 
     def resume( self ) :
         self.send_command( "G90" ) # Absolute positioning
@@ -92,7 +99,9 @@ class PrintJob( Thread ) :
             print "~~~Setting extrusion position to", self.paused_position[3]
             self.send_command( "G92 E" + str( self.paused_position[3] ) )
 
+        self.serial_reader.add_listener( self.listen )
         self.paused = False
+
 
     def send_command( self, command, wait=True ) :
         print "Sending command", command, wait
@@ -127,13 +136,22 @@ class PrintJob( Thread ) :
             print "~~~Pause found position", self.paused_position
         print "End parse_position"
 
+
+    def listen( self, line ) :
+        if line.startswith( 'ok' ) :
+            self.ok_count += 1
+            print "## Job LISTEN ok count", self.ok_count, "vs", self.command_count
+
+        
+
     def run( self ) :
         print "***** Job started"
 
         try :
             pm = configuration.printer_manager
             self.serial_reader = pm.serial_reader;
-            self.serial_reader.ok_count = 0
+            self.ok_count = 0
+            self.serial_reader.add_listener( self.listen )
             output = pm.connection
             self.command_count = 0
             self.extrude_counter = ExtrudeCounter()
@@ -141,8 +159,16 @@ class PrintJob( Thread ) :
             for line in self.input :
 
                 # Let's not get too far ahead of ourselves!
-                while self.command_count - self.serial_reader.ok_count > 1 : # MORE Allow more than 1??
+                while self.command_count - self.ok_count > 1 : # MORE Allow more than 1??
                     while self.paused :
+                        if self.paused_short_job is None :
+                            self.paused_short_job = pm.pop_job()
+                            if self.paused_short_job :
+                                print "~~~Sending short job while paused"
+                                self.paused_short_job.send()
+                        else :
+                            if self.paused_short_job.status == JobStatus.ENDED :
+                                self.paused_short_job = None
                         sleep( 1 );
 
                     if self.status == JobStatus.CANCELLING :
@@ -174,7 +200,7 @@ class PrintJob( Thread ) :
     def __tally_oks( self ) :
 
         while self.__running() :
-            print "## PrintJob sleeping until oks tally", self.status == JobStatus.CANCELLING, self.command_count, self.serial_reader.ok_count
+            print "## PrintJob sleeping until oks tally", self.status == JobStatus.CANCELLING, self.command_count, self.ok_count
             sleep(1)
 
 
@@ -195,7 +221,7 @@ class PrintJob( Thread ) :
         if self.status == JobStatus.CANCELLING :
             return False
 
-        return self.command_count > self.serial_reader.ok_count
+        return self.command_count > self.ok_count
 
     def tidy( self, line ) :
         semi = line.find( ";" )

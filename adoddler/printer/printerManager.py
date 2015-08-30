@@ -115,10 +115,19 @@ class PrinterManager :
     def send( self, f, is_short=False ) :
         self.ensure_connected()
 
+        # Short jobs can be added to the queue for when then current job ends,
+        # or is paused. This allows moving the heading during pause.
+        # The paused PrintJob will take care of poping off the new PrintJob from the
+        # queue and staring it.
+        if is_short and self.status != PrinterStatus.IDLE :
+            print "~~~Queued job"
+            self.queue.append( PrintJob( f, is_short ) )
+            return
+
         if self.status == PrinterStatus.IDLE :
-            job = PrintJob( f, is_short )
 
             if self.print_job is None :
+                job = PrintJob( f, is_short )
                 job.send()
                 self.print_job = job
                 print "*** Setting to active"
@@ -158,14 +167,20 @@ class PrinterManager :
             self.print_job = None
             self.status = PrinterStatus.IDLE
 
-            if len( self.queue ) > 0 :
-                job = self.queue[0]
-                del( self.queue[0] )
-                if len( self.queue ) == 0 :
-                    self.queue_only_short = True
-                print "Sending a queued job"
-                job.send()
+        job = self.pop_job()
+        if job :
+            print "Sending a queued job"
+            job.send()
+            
 
+    def pop_job( self ) :
+        if len( self.queue ) > 0 :
+            job = self.queue[0]
+            del( self.queue[0] )
+            if len( self.queue ) == 0 :
+                self.queue_only_short = True
+            return job
+        return None
 
     def cancel( self ) :
         if self.print_job :
