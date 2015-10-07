@@ -94,7 +94,7 @@ class PrintJob( Thread ) :
             for line in self.input :
 
                 # Let's not get too far ahead of ourselves!
-                while self.command_count - self.serial_reader.ok_count > 1 : # MORE Allow more than 1??
+                while self.command_count - self.serial_reader.ok_count > 4 : # MORE Allow more than 1??
                     while self.paused :
                         sleep( 1 );
 
