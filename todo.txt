@@ -23,3 +23,5 @@ Turn off fans/motors etc on disconnect?
 
 Console to send/receive Gcode commands
 
+Merge PrintJob.parse_position and listen?
+

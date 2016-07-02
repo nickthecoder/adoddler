@@ -9,9 +9,10 @@ class PrintJob( Thread ) :
     Sends gcode to the printer.
     """
 
-    def __init__( self, fileOrPath, is_short=False ) :
+    def __init__( self, fileOrPath, name, is_short=False ) :
 
         Thread.__init__( self )
+        self.name = name
         self.status = JobStatus.CREATED
         self.input = None
         self.is_short = is_short
@@ -68,20 +69,22 @@ class PrintJob( Thread ) :
         print "~~~~~~~~~~~ Pausing ~~~~~~~~~~~~"
         self.paused = True
         self.__tally_oks() # Wait for existing command(s) to finish
-        self.serial_reader.remove_listener( self.listen )
+
+        # Remember if the job was using relative or absolute positioning. During pause we will move relative, and
+        # will need to revert back when we resume.
+        # BUG. We aren't remembering the units (and onPause.gcode sets to metric).
         self.paused_relative = self.extrude_counter.relative
-        self.paused_position = None
 
         print "~~~ Paused ish"
 
+        self.paused_position = None
         self.serial_reader.add_listener( self.parse_position )
-        self.send_command( "M114", True ) # Get current position.
-        self.serial_reader.remove_listener( self.parse_position )
-        print "~~~Pos", self.paused_position
-        print "~~~Relative?", self.paused_relative
+        self.send_command( "M114", expect_ok=False ) # Get current position.
+        self.serial_reader.remove_listener( self.listen )
 
 
     def resume( self ) :
+        self.serial_reader.add_listener( self.listen )
         self.send_command( "G90" ) # Absolute positioning
         if self.paused_position is not None :
             x = self.paused_position[0]
@@ -90,20 +93,23 @@ class PrintJob( Thread ) :
             if x is not None and y is not None and z is not None :
                 self.send_command( "G0 X" + str(x) + " Y" + str(y) + " Z" + str(z) )
 
+
         if self.paused_relative :
             self.send_command( "G91" ) # Set to relative positioning
 
-        # If we have manually extrudeded extra filament during pause, then set the value back,
+        # BUG. If the job was not using metric units, we need to switch back, as onPause.goce sets to metric.
+
+        # If we have manually extruded extra filament during pause, then set the value back,
         # so that extra filament isn't counted for the remainder of the print.
         if self.paused_position and self.paused_position[3] is not None :
             print "~~~Setting extrusion position to", self.paused_position[3]
             self.send_command( "G92 E" + str( self.paused_position[3] ) )
 
-        self.serial_reader.add_listener( self.listen )
+
         self.paused = False
 
 
-    def send_command( self, command, wait=True ) :
+    def send_command( self, command, wait=True, expect_ok=True ) :
         print "Sending command", command, wait
         configuration.printer_manager.connection.write( command + "\n" )
         self.command_count += 1        
@@ -113,17 +119,14 @@ class PrintJob( Thread ) :
 
 
     def parse_position( self, line ) :
-        print "~~~Pause parsing line", line
         if line.startswith( "X:") :
             x = None
             y = None
             z = None
             e = None
             parts = line.split(" ")
-            print "Parts", parts
             for part in parts :
                 subs = part.split( ":" )
-                print "Subs", subs
                 if subs[0] == 'X' and x is None :
                     x = float( subs[1] )
                 if subs[0] == 'Y' and y is None :
@@ -134,13 +137,15 @@ class PrintJob( Thread ) :
                     e = float( subs[1] )
             self.paused_position = ( x, y, z, e )
             print "~~~Pause found position", self.paused_position
-        print "End parse_position"
+            # We have found what we need, now we can remove ourselves
+            self.serial_reader.remove_listener( self.parse_position )
 
 
     def listen( self, line ) :
+        print "PJ L:isten", self.name, ". Heard :", line
         if line.startswith( 'ok' ) :
             self.ok_count += 1
-            print "## Job LISTEN ok count", self.ok_count, "vs", self.command_count
+            print "## Job", self.name, "LISTEN ok count", self.ok_count, "of", self.command_count
 
         
 
@@ -200,17 +205,18 @@ class PrintJob( Thread ) :
     def __tally_oks( self ) :
 
         while self.__running() :
-            print "## PrintJob sleeping until oks tally", self.status == JobStatus.CANCELLING, self.command_count, self.ok_count
+            print "## PrintJob", self.name, "sleeping until oks tally", self.ok_count, "of", self.command_count
             sleep(1)
 
 
     def __end( self ) :
+        self.__tally_oks()
 
+        self.serial_reader.remove_listener( self.listen )
+        self.serial_reader.remove_listener( self.parse_position )
         pm = configuration.printer_manager
         self.input.close()
-        print "## Closed the input file"
-
-        self.__tally_oks()
+        print "##", self.name, "Closed the input file"
 
         print "*** ending job"
         self.status = JobStatus.ENDED

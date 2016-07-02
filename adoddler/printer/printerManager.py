@@ -112,7 +112,7 @@ class PrinterManager :
         self.status = PrinterStatus.DISCONNECTED
 
 
-    def send( self, f, is_short=False ) :
+    def send( self, f, name, is_short=False ) :
         self.ensure_connected()
 
         # Short jobs can be added to the queue for when then current job ends,
@@ -121,13 +121,13 @@ class PrinterManager :
         # queue and staring it.
         if is_short and self.status != PrinterStatus.IDLE :
             print "~~~Queued job"
-            self.queue.append( PrintJob( f, is_short ) )
+            self.queue.append( PrintJob( f, name, is_short ) )
             return
 
         if self.status == PrinterStatus.IDLE :
 
             if self.print_job is None :
-                job = PrintJob( f, is_short )
+                job = PrintJob( f, name, is_short )
                 job.send()
                 self.print_job = job
                 print "*** Setting to active"
@@ -142,6 +142,7 @@ class PrinterManager :
         else :
             raise Exception( "Printer not idle" )
 
+
     def pause( self ) :
         
         if self.status != PrinterStatus.ACTIVE :
@@ -150,6 +151,7 @@ class PrinterManager :
         print "PM Pausing"
         self.status = PrinterStatus.PAUSED
         self.print_job.pause()
+        self.send( os.path.join( os.path.join( "gcode", "misc" ), "onPause.gcode" ), "onPause", is_short=True )
 
 
     def resume( self ) :
@@ -157,6 +159,7 @@ class PrinterManager :
             raise Exception( "Printer not paused" )
 
         print "PM Resuming"
+        self.send( os.path.join( os.path.join( "gcode", "misc" ), "onResume.gcode" ), "onResume", is_short=True )
         self.print_job.resume()
         self.status = PrinterStatus.ACTIVE
 

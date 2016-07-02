@@ -21,7 +21,7 @@ class ChangeSettingAjaxAction( AbstractAction ) :
 
         # print "Change setting with the following gcode :\n", command
         f = StringIO.StringIO( command )
-        configuration.printer_manager.send( f )
+        configuration.printer_manager.send( f, "Save Settings" )
 
         handler.wfile.write( value )
 

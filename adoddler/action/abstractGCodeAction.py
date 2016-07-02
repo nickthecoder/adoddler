@@ -21,7 +21,7 @@ class AbstractGCodeAction( AbstractAction ) :
         short = handler.parameters.get("short") is not None
         path = os.path.join( "gcode", name + ".gcode" )
         print "@@GCode Action", path, "short?", short, handler.parameters.get("short")
-        configuration.printer_manager.send( path, is_short=short )
+        configuration.printer_manager.send( path, name, is_short=short )
 
         # Child classes will do more after this.
 

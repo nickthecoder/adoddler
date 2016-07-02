@@ -45,7 +45,10 @@ class SerialReader( Thread ) :
 
     def add_listener( self, listener ) :
         self.listeners.append( listener )
+        print "Added listener", len( self.listeners )
 
     def remove_listener( self, listener ) :
-        self.listeners.remove( listener )
+        if listener in self.listeners :
+            self.listeners.remove( listener )
+        print "Removed listener", len( self.listeners )
 
