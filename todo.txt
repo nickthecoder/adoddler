@@ -1,11 +1,27 @@
 Pause the printer
     Allow navigation while paused
-        Remember the current position, and return here on 
-    Run some standard code on pause and on resume.
+        Remember the current position, and return here on resume
+    Run some standard code on pause and on resume. Up / Down - don't extrude
+    Use existing helper class to reset the "absolute/relative" state on resume.
+    
 
+Logging on/off - clear - rotate?
+
+Bug : Ajax timeout
+
+Reprint the previous document
+    Show history of last N prints (if they still exist)
+
+Queue everything
+    Show Print when printer not idle.
+    Show items in the queue - Each item needs a name.
+    Item also has a unique id, so that it can be deleted from the queue.
 
 Turn off fans/motors etc on disconnect?
     M1 Sleep
     M18 Disable all steppers
 
+Console to send/receive Gcode commands
+
+Merge PrintJob.parse_position and listen?
 

@@ -1,3 +1,6 @@
+import sys
+import traceback
+
 from time import sleep
 from threading import Thread
 
@@ -13,7 +16,6 @@ class SerialReader( Thread ) :
         Thread.__init__( self )
         self.connection = connection
         self.stopping = False
-        self.ok_count = 0
         self.listeners = []
 
     def run( self ) :
@@ -32,19 +34,21 @@ class SerialReader( Thread ) :
         stripped = line.strip( '\0' ).strip()
         print ">>", stripped
 
-        if stripped.startswith( 'ok' ) :
-            self.ok_count += 1
-            print "## SR ok count", self.ok_count
-
         for listener in self.listeners :
-            listener( stripped )
+            try :
+                listener( stripped )
+            except :
+                print(traceback.format_exc())
 
     def stop( self ) :
         self.stopping = True
 
     def add_listener( self, listener ) :
         self.listeners.append( listener )
+        print "Added listener", len( self.listeners )
 
     def remove_listener( self, listener ) :
-        self.listeners.remove( listener )
+        if listener in self.listeners :
+            self.listeners.remove( listener )
+        print "Removed listener", len( self.listeners )
 

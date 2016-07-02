@@ -112,13 +112,28 @@ class PrinterManager :
         self.status = PrinterStatus.DISCONNECTED
 
 
-    def send( self, f, is_short=False ) :
+    def send( self, f, name, is_short=False ) :
         self.ensure_connected()
 
+        # Short jobs can be added to the queue for when then current job ends,
+        # or is paused. This allows moving the heading during pause.
+        # The paused PrintJob will take care of poping off the new PrintJob from the
+        # queue and staring it.
+        if is_short and self.status != PrinterStatus.IDLE :
+            print "~~~Queued job"
+            self.queue.append( PrintJob( f, name, is_short ) )
+            return
+
         if self.status == PrinterStatus.IDLE :
-            job = PrintJob( f, is_short )
+
             if self.print_job is None :
+                job = PrintJob( f, name, is_short )
                 job.send()
+                self.print_job = job
+                print "*** Setting to active"
+                self.status = PrinterStatus.ACTIVE
+
+
             else :
                 # We are currently processing a short job, so queue this one.
                 self.queue.append( job )
@@ -126,6 +141,7 @@ class PrinterManager :
                     self.queue_only_short = False
         else :
             raise Exception( "Printer not idle" )
+
 
     def pause( self ) :
         
@@ -135,6 +151,7 @@ class PrinterManager :
         print "PM Pausing"
         self.status = PrinterStatus.PAUSED
         self.print_job.pause()
+        self.send( os.path.join( os.path.join( "gcode", "misc" ), "onPause.gcode" ), "onPause", is_short=True )
 
 
     def resume( self ) :
@@ -142,18 +159,31 @@ class PrinterManager :
             raise Exception( "Printer not paused" )
 
         print "PM Resuming"
+        self.send( os.path.join( os.path.join( "gcode", "misc" ), "onResume.gcode" ), "onResume", is_short=True )
         self.print_job.resume()
         self.status = PrinterStatus.ACTIVE
 
-    def job_ended( self ) :
 
+    def job_ended( self, job ) :
+
+        if ( job == self.print_job ) :
+            self.print_job = None
+            self.status = PrinterStatus.IDLE
+
+        job = self.pop_job()
+        if job :
+            print "Sending a queued job"
+            job.send()
+            
+
+    def pop_job( self ) :
         if len( self.queue ) > 0 :
             job = self.queue[0]
             del( self.queue[0] )
             if len( self.queue ) == 0 :
                 self.queue_only_short = True
-            print "Sending a queued job"
-            job.send()
+            return job
+        return None
 
     def cancel( self ) :
         if self.print_job :

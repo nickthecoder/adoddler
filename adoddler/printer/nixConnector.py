@@ -4,6 +4,7 @@
 
 import os
 import serial
+from time import sleep
 
 class NixConnector() :
 
@@ -27,6 +28,7 @@ class NixConnector() :
                     break
 
         if result :
+            sleep(2)
             return result
 
         raise Exception( "Failed to open device(s) : " + str(self.devices) )
@@ -36,7 +38,7 @@ class NixConnector() :
         dev = self.__find_device( device )
         if dev :
             print "Connecting to", dev, "@", self.baud_rate, "Hz"
-            return serial.Serial( dev, self.baud_rate, timeout = 1 )        
+            return serial.Serial( dev, self.baud_rate )        
         return None
 
     def __find_device( self, device ) :

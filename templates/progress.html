@@ -1,5 +1,5 @@
 <div id="progress">
-    <div id="progress_done" style="width: {{ (100 * job.serial_reader.ok_count / job.command_total) }}%"></div>
+    <div id="progress_done" style="width: {{ (100 * job.ok_count / job.command_total) }}%"></div>
     <div id="progress_text">
 
         <span id="extrude_count">

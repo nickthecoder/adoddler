@@ -21,7 +21,7 @@ class SettingsAction( HTMLTemplateAction ) :
         pm.serial_reader.remove_listener( pm.listener )
 
         # Run the "settings" command
-        pm.send( os.path.join( os.path.join( "gcode", "misc", ), "settings.gcode" ) )
+        pm.send( os.path.join( os.path.join( "gcode", "misc", ), "settings.gcode" ), "settings" )
 
         # Wait for the job to end, and stop listening
         print "SettingsAction joining print job"
