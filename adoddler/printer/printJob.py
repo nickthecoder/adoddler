@@ -66,7 +66,7 @@ class PrintJob( Thread ) :
 
 
     def pause( self ) :
-        print "~~~~~~~~~~~ Pausing ~~~~~~~~~~~~"
+        print "PAUSE pause"
         self.paused = True
         self.__tally_oks() # Wait for existing command(s) to finish
 
@@ -76,9 +76,9 @@ class PrintJob( Thread ) :
         self.paused_relative = self.extrude_counter.relative
 
         # Note, this is stopping the MAIN listener, which will be added again when we resume.
-        self.serial_reader.remove_listener( self.listen )
+        # self.serial_reader.remove_listener( self.listen )
 
-        print "~~~ Paused ish"
+        print "PAUSE Paused ish"
 
         self.paused_position = None
         self.serial_reader.add_listener( self.parse_position )
@@ -86,30 +86,33 @@ class PrintJob( Thread ) :
 
         self.send_command( "M114", expect_ok=False ) # Get current position.
 
+        print "PAUSE complete"
 
     def resume( self ) :
         
         # The main listener was removed in the pause method, so add it back
-        self.serial_reader.add_listener( self.listen )
+        # self.serial_reader.add_listener( self.listen )
         
+        self.paused = False
+
         self.send_command( "G90" ) # Absolute positioning
-        print "Now using absolute positioning"
+        print "PAUSE Resume Now using absolute positioning"
         
         if self.paused_position is not None :
             x = self.paused_position[0]
             y = self.paused_position[1]
             z = self.paused_position[2]
-            print "Paused position : ", x, y, z
+            print "PAUSE position : ", x, y, z
             if x is not None and y is not None and z is not None :
                 self.send_command( "G0 X" + str(x) + " Y" + str(y) + " Z" + str(z) )
-                print "Reset print head position"
+                print "PAUSE Reset print head position"
 
         # Make doubly sure that the listener added by the pause method is remove
         # It should have removed itself when it parsed the position.
         self.serial_reader.remove_listener( self.parse_position )
 
         if self.paused_relative :
-            print "Reset to absolute positioning"
+            print "PAUSE Reset to absolute positioning"
             self.send_command( "G91" ) # Set to relative positioning
 
         # BUG. If the job was not using metric units, we need to switch back, as onPause.gcode sets to metric.
@@ -117,26 +120,17 @@ class PrintJob( Thread ) :
         # If we have manually extruded extra filament during pause, then set the value back,
         # so that extra filament isn't counted for the remainder of the print.
         if self.paused_position and self.paused_position[3] is not None :
-            print "~~~Setting extrusion position to", self.paused_position[3]
+            print "PAUSE Setting extrusion position to", self.paused_position[3]
             self.send_command( "G92 E" + str( self.paused_position[3] ) )
-            print "Reset extrude counter"
+            print "PAUSE Reset extrude counter"
 
-        print "Resume complete"
-        self.paused = False
-
-
-    def send_command( self, command, wait=True, expect_ok=True ) :
-        print "Sending command", command, wait
-        configuration.printer_manager.connection.write( command + "\n" )
-        self.command_count += 1        
-        if wait :
-            self.__tally_oks()
-        print"Sent command", command
+        print "PAUSE Resume complete"
 
 
     def parse_position( self, line ) :
-        print "parse_position line :", line
+        print "PAUSE parse_position line :", line
         if line.startswith( "X:") :
+            line = line.replace( "Y", " Y" ).replace( "X", " X" ).replace( "Z", " Z" ).replace( "E", " E" )
             x = None
             y = None
             z = None
@@ -153,10 +147,20 @@ class PrintJob( Thread ) :
                 if subs[0] == 'E' and e is None :
                     e = float( subs[1] )
             self.paused_position = ( x, y, z, e )
-            print "~~~Pause found position", self.paused_position
+            print "PAUSE found position", self.paused_position
 
             # We have found what we need, now we can remove ourselves
             self.serial_reader.remove_listener( self.parse_position )
+            print "PAUSE removed parse_position listener"
+
+
+    def send_command( self, command, wait=True, expect_ok=True ) :
+        print "Sending command", command, wait
+        configuration.printer_manager.connection.write( command + "\n" )
+        self.command_count += 1        
+        if wait :
+            self.__tally_oks()
+        print"Sent command", command
 
 
     def listen( self, line ) :
